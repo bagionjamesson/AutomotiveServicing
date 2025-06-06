@@ -1,5 +1,185 @@
-<html>
-  <body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AUTOMOTIVE SERVICING</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  
+  <!-- PDF.js library from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="https://bagionjamesson.github.io/Home/" class="logo" style="text-decoration:none;">
+      <img src="logo.png" alt="AutoLearn PH Logo" />
+      <span class="logo-text">
+        <span class="auto">AUTO</span><span class="learn">LEARN</span><span class="ph">PH</span>
+      </span>
+    </a>
+    <ul>
+      <li><a href="#" class="active">Home</a></li>
+      <li><a href="#">Modules</a></li>
+      <li class="dropdown">
+        <a href="#">Learning Materials</a>
+        <ul class="dropdown-menu">
+          <li><a href="#">Learning Materials</a></li>
+          <li><a href="#">TESDA Online</a></li>
+          <li><a href="#">TESDA YouTube</a></li>
+          <li><a href="#">Automotive Forums</a></li>
+          <li><a href="#">Video Tutorials</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a href="#">About</a>
+        <ul class="dropdown-menu">
+          <li><a href="#">about a-l-c</a></li>
+          <li><a href="#">about james</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <section class="main-section">
+    <!-- PDF Viewer -->
+    <div class="pdf-viewer" id="pdfViewer" style="display:none;">
+      <div id="pdf-controls-top">
+        <button id="prev-page-top" title="Previous Page">Previous</button>
+        <span>Page <span id="page-num-top">1</span> of <span id="page-count-top">--</span></span>
+        <span class="pdf-controls-spacer"></span>
+        <button id="next-page-top" title="Next Page">Next</button>
+      </div>
+      <p id="pdf-status-message"></p>
+      <canvas id="pdf-canvas"></canvas>
+      <iframe id="form-viewer" style="display:none; width:100%; height:600px; border:none;"></iframe>
+      <div id="pdf-controls-bottom">
+        <button id="prev-page-bottom" title="Previous Page">Previous</button>
+        <span>Page <span id="page-num-bottom">1</span> of <span id="page-count-bottom">--</span></span>
+        <span class="pdf-controls-spacer"></span>
+        <button id="next-page-bottom" title="Next Page">Next</button>
+      </div>
+      <div class="pdf-viewer-actions">
+        <button class="nav-btn prev-btn" style="display:none;">
+          <span class="nav-label"></span>
+        </button>
+        <button class="nav-btn next-btn" style="display:none;">
+          <span class="nav-label"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Course Outline -->
+    <div class="course-outline" id="courseOutline">
+      <h1>Course Outline</h1>
+      <div class="course-sidebar">
+        <h3 class="unit-title"> AUTOMOTIVE SERVICING</h3>
+        <div class="lesson-item" data-pdf-src="lesson1.pdf">
+          <span class="lesson-title">Lesson 1: Use Hand Tools</span>
+          <span class="lesson-status"></span>
+        </div>
+        <div class="lesson-item" data-pdf-src="lesson2.pdf">
+          <span class="lesson-title">Lesson 2: Perform Mensuration and Calculations</span>
+          <span class="lesson-status"></span>
+        </div>
+        <div class="test-item test-highlight" data-pdf-src="quiz_after_lesson2.pdf">
+          <span class="test-title">Quiz: Lesson 1 & 2</span>
+          <button class="take-test-btn">Take the Quiz</button>
+        </div>
+        <div class="lesson-item" data-pdf-src="lesson3.pdf">
+          <span class="lesson-title">Lesson 3: Interpret Plans and Drawings</span>
+          <span class="lesson-status"></span>
+        </div>
+        <div class="lesson-item" data-pdf-src="lesson4.pdf">
+          <span class="lesson-title">Lesson 4: Perform Shop Maintenance</span>
+          <span class="lesson-status"></span>
+        </div>
+        <div class="lesson-item" data-pdf-src="lesson5.pdf">
+          <span class="lesson-title">Lesson 5: Practice Occupational Health and Safety Procedures</span>
+          <span class="lesson-status"></span>
+        </div>
+        <div class="test-item test-highlight" data-pdf-src="quiz_after_lesson5.pdf">
+          <span class="test-title">Quiz: Lesson 3,4 & 5</span>
+          <button class="take-test-btn">Take the Quiz</button>
+        </div>
+        
+      </div> <!-- End of .course-sidebar -->
+    </div>
     
-  </body></bodyA>
+  </section>
+<section>
+   <!-- Back to Course Outline button BELOW the PDF viewer -->
+    <div id="below-pdf-back-btn" style="display:none; margin: 24px 0;">
+      <div class="below-nav-flex">
+        <div class="below-nav-left">
+          <button class="nav-btn" id="belowPrevBtn" style="display:none;">
+            <span id="belowPrevLabel"></span>
+          </button>
+        </div>
+        <div class="below-nav-center">
+          <button id="belowBackToOutlineBtn" class="nav-btn back-to-outline-btn">
+            <i class="fas fa-arrow-left"></i> Back to Course Outline
+          </button>
+        </div>
+        <div class="below-nav-right">
+          <button class="nav-btn" id="belowNextBtn" style="display:none;">
+            <span id="belowNextLabel"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <h3>AutoLearn PH</h3>
+        <p>Your complete automotive learning companion designed for Filipino learners.</p>
+        <p>Aligned with TESDA standards and industry best practices.</p>
+      </div>
+      <div>
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Modules</a></li>
+          <li><a href="#">Learning Materials</a></li>
+          <li><a href="#">About Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Learning Resources</h3>
+        <ul>
+          <li><a href="#">TESDA Online</a></li>
+          <li><a href="#">TESDA YouTube</a></li>
+          <li><a href="#">Automotive Forums</a></li>
+          <li><a href="#">Video Tutorials</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Contact Information</h3>
+        <p>Email: bagionjamesson12@gmail.com</p>
+        <p>Phone: +63 912 345 6789</p>
+        <p>Location: Valenzuela City, Philippines</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    const belowPrevBtn = document.getElementById('belowPrevBtn');
+const belowNextBtn = document.getElementById('belowNextBtn');
+const belowPrevLabel = document.getElementById('belowPrevLabel');
+const belowNextLabel = document.getElementById('belowNextLabel');
+
+function showLesson(index) {
+  // ...existing code...
+  updateBelowNavButtons();
+}
+
+function showQuiz(index) {
+  // ...existing code...
+  updateBelowNavButtons();
+}
+  </script>
+
+</body>
 </html>
