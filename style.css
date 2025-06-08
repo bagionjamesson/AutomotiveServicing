@@ -746,6 +746,26 @@ canvas#pdf-canvas { /* Made selector more specific for clarity */
   margin: 0 12px;
 }
 
+#belowPrevLabel,
+#belowNextLabel {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px; /* Adjust as needed */
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Allow wrapping for the Back to Course Outline button */
+#belowBackToOutlineBtn {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 230px; /* Adjust as needed */
+  display: inline-block;
+  vertical-align: middle;
+}
+
 function showLesson(index) {
   // ...existing code...
   updateBelowNavButtons();

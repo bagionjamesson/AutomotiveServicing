@@ -14,23 +14,25 @@
 document.addEventListener('DOMContentLoaded', () => {
   // List of lessons and quizzes in order
   const lessons = [
-    { title: "Lesson 1: Use Hand Tools", pdf: "lesson1.pdf" },
+    { title: "Lesson 1: Use Hand Tools", shortTitle: "Lesson 1", pdf: "lesson1.pdf" },
     { 
       title: "Lesson 2: Perform Mensuration and Calculations", 
+      shortTitle: "Lesson 2",
       pdf: "lesson2.pdf", 
       quiz: { 
         title: "Quiz: After Lesson 2", 
-        form: "https://forms.gle/TaT2C6rXDv5MfeUPA" // Quiz for 1 & 2
+        form: "https://forms.gle/dfDqbScq2oprYDaZ9" // Quiz for 1 & 2
       } 
     },
-    { title: "Lesson 3: Interpret Plans and Drawings", pdf: "lesson3.pdf" },
-    { title: "Lesson 4: Perform Shop Maintenance", pdf: "lesson4.pdf" },
+    { title: "Lesson 3: Interpret Plans and Drawings", shortTitle: "Lesson 3", pdf: "lesson3.pdf" },
+    { title: "Lesson 4: Perform Shop Maintenance", shortTitle: "Lesson 4", pdf: "lesson4.pdf" },
     { 
       title: "Lesson 5: Practice Occupational Health and Safety Procedures", 
+      shortTitle: "Lesson 5",
       pdf: "lesson5.pdf", 
       quiz: { 
         title: "Quiz: After Lesson 5", 
-        form: "https://forms.gle/n7A3dtKis6Uh4DR69" // Quiz for 3, 4 & 5
+        form: "https://forms.gle/CvZb6AhaM5YzSeya7" // Quiz for 3, 4 & 5
       } 
     }
   ];
@@ -51,12 +53,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const belowBackBtnDiv = document.getElementById('below-pdf-back-btn');
   const belowBackToOutlineBtn = document.getElementById('belowBackToOutlineBtn');
   const belowPrevBtn = document.getElementById('belowPrevBtn');
-  const belowPrevLabel = document.getElementById('belowPrevLabel');
   const belowNextBtn = document.getElementById('belowNextBtn');
+  const belowPrevLabel = document.getElementById('belowPrevLabel');
   const belowNextLabel = document.getElementById('belowNextLabel');
 
   let currentIndex = null;
   let showingQuiz = false;
+  let pdfDoc = null;
+  let pageNum = 1;
+  let totalPages = 1;
 
   // Helper to load a lesson by index
   function showLesson(index) {
@@ -109,14 +114,14 @@ document.addEventListener('DOMContentLoaded', () => {
       // Previous: show lesson if previous is a lesson
       else if (currentIndex > 0) {
         prevBtn.style.display = 'flex';
-        prevLabel.textContent = '← ' + lessons[currentIndex - 1].title;
+        prevLabel.textContent = '← ' + lessons[currentIndex - 1].shortTitle;
         prevBtn.onclick = () => showLesson(currentIndex - 1);
       }
 
       // Next: show lesson if next is a lesson
       if (currentIndex < lessons.length - 1 && !lessons[currentIndex + 1].quiz) {
         nextBtn.style.display = 'flex';
-        nextLabel.textContent = lessons[currentIndex + 1].title + ' →';
+        nextLabel.textContent = lessons[currentIndex + 1].shortTitle + ' →';
         nextBtn.onclick = () => showLesson(currentIndex + 1);
       }
       // Next: show quiz if next is a quiz
@@ -130,13 +135,13 @@ document.addEventListener('DOMContentLoaded', () => {
     else {
       // Previous: show lesson before this quiz
       prevBtn.style.display = 'flex';
-      prevLabel.textContent = '← ' + lessons[currentIndex].title;
+      prevLabel.textContent = '← ' + lessons[currentIndex].shortTitle;
       prevBtn.onclick = () => showLesson(currentIndex);
 
       // Next: show next lesson if exists
       if (currentIndex < lessons.length - 1) {
         nextBtn.style.display = 'flex';
-        nextLabel.textContent = lessons[currentIndex + 1].title + ' →';
+        nextLabel.textContent = lessons[currentIndex + 1].shortTitle + ' →';
         nextBtn.onclick = () => showLesson(currentIndex + 1);
       }
     }
@@ -154,13 +159,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // Lesson 1: blank / Back / Lesson 2
         belowPrevBtn.style.display = 'none';
         belowNextBtn.style.display = 'inline-block';
-        belowNextLabel.textContent = lessons[1].title + ' →';
+        belowNextLabel.textContent = lessons[1].shortTitle + ' →';
         belowNextBtn.onclick = () => showLesson(1);
       }
       else if (currentIndex === 1) {
         // Lesson 2: Lesson 1 / Back / Take the Quiz
         belowPrevBtn.style.display = 'inline-block';
-        belowPrevLabel.textContent = '← ' + lessons[0].title;
+        belowPrevLabel.textContent = '← ' + lessons[0].shortTitle;
         belowPrevBtn.onclick = () => showLesson(0);
 
         belowNextBtn.style.display = 'inline-block';
@@ -174,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
         belowPrevBtn.onclick = () => showQuiz(1);
 
         belowNextBtn.style.display = 'inline-block';
-        belowNextLabel.textContent = lessons[3].title + ' →';
+        belowNextLabel.textContent = lessons[3].shortTitle + ' →';
         belowNextBtn.onclick = () => showLesson(3);
       }
       else if (currentIndex === 3) {
@@ -184,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
         belowPrevBtn.onclick = () => showQuiz(1);
 
         belowNextBtn.style.display = 'inline-block';
-        belowNextLabel.textContent = lessons[4].title + ' →';
+        belowNextLabel.textContent = lessons[4].shortTitle + ' →';
         belowNextBtn.onclick = () => showLesson(4);
       }
       else if (currentIndex === 4) {
@@ -204,18 +209,18 @@ document.addEventListener('DOMContentLoaded', () => {
       if (currentIndex === 1) {
         // Quiz after lesson 2: Lesson 2 / Back / Lesson 3
         belowPrevBtn.style.display = 'inline-block';
-        belowPrevLabel.textContent = '← ' + lessons[1].title;
+        belowPrevLabel.textContent = '← ' + lessons[1].shortTitle;
         belowPrevBtn.onclick = () => showLesson(1);
 
         belowNextBtn.style.display = 'inline-block';
-        belowNextLabel.textContent = lessons[2].title + ' →';
+        belowNextLabel.textContent = lessons[2].shortTitle + ' →';
         belowNextBtn.onclick = () => showLesson(2);
       }
       // For quiz after lesson 5
       else if (currentIndex === 4) {
         // Quiz after lesson 5: Lesson 5 / Back / <blank>
         belowPrevBtn.style.display = 'inline-block';
-        belowPrevLabel.textContent = '← ' + lessons[4].title;
+        belowPrevLabel.textContent = '← ' + lessons[4].shortTitle;
         belowPrevBtn.onclick = () => showLesson(4);
 
         belowNextBtn.style.display = 'none';
@@ -253,6 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
     formViewer.style.display = 'none';
   });
 
+  // Update your loadPdf function:
   function loadPdf(pdfUrl) {
     const pdfjsLib = window['pdfjs-dist/build/pdf'];
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js';
@@ -261,18 +267,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const ctx = canvas.getContext('2d');
 
     pdfjsLib.getDocument(pdfUrl).promise.then(function(pdf) {
-      // Always render the first page
-      pdf.getPage(1).then(function(page) {
-        const viewport = page.getViewport({ scale: 1.2 });
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-
-        const renderContext = {
-          canvasContext: ctx,
-          viewport: viewport
-        };
-        page.render(renderContext);
-      });
+      pdfDoc = pdf;
+      pageNum = 1;
+      totalPages = pdf.numPages;
+      renderPage(pageNum);
     }).catch(function(error) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.font = "16px Arial";
@@ -280,6 +278,51 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.fillText("Failed to load PDF: " + error.message, 10, 50);
     });
   }
+
+  // Render a specific page
+  function renderPage(num) {
+    const canvas = document.getElementById('pdf-canvas');
+    const ctx = canvas.getContext('2d');
+    pdfDoc.getPage(num).then(function(page) {
+      const viewport = page.getViewport({ scale: 1.2 });
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+
+      const renderContext = {
+        canvasContext: ctx,
+        viewport: viewport
+      };
+      page.render(renderContext);
+
+      // Update page numbers if you have them
+      const pageNumTop = document.getElementById('page-num-top');
+      const pageCountTop = document.getElementById('page-count-top');
+      const pageNumBottom = document.getElementById('page-num-bottom');
+      const pageCountBottom = document.getElementById('page-count-bottom');
+      if (pageNumTop) pageNumTop.textContent = num;
+      if (pageCountTop) pageCountTop.textContent = totalPages;
+      if (pageNumBottom) pageNumBottom.textContent = num;
+      if (pageCountBottom) pageCountBottom.textContent = totalPages;
+    });
+  }
+
+  // Navigation handlers
+  function onPrevPage() {
+    if (pageNum <= 1) return;
+    pageNum--;
+    renderPage(pageNum);
+  }
+  function onNextPage() {
+    if (pageNum >= totalPages) return;
+    pageNum++;
+    renderPage(pageNum);
+  }
+
+  // Attach event listeners (make sure these IDs exist in your HTML)
+  document.getElementById('prev-page-top')?.addEventListener('click', onPrevPage);
+  document.getElementById('next-page-top')?.addEventListener('click', onNextPage);
+  document.getElementById('prev-page-bottom')?.addEventListener('click', onPrevPage);
+  document.getElementById('next-page-bottom')?.addEventListener('click', onNextPage);
 
   // Initial setup: you may want to hide the PDF viewer on load
   pdfViewer.style.display = 'none';
