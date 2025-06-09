@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Hide the evaluation button when switching lessons
     const evalBtn = document.getElementById('courseEvalBtn');
-    if (evalBtn) evalBtn.style.display = '20px' ;
+    if (evalBtn) evalBtn.style.display = '200px' ;
 
     // Load the PDF
     loadPdf(lessons[index].pdf);
@@ -157,8 +157,29 @@ document.addEventListener('DOMContentLoaded', () => {
   // Call this whenever you show a lesson or quiz
   function updateBelowNavButtons() {
     // Hide by default
+    // Hide all individual nav buttons by default and reset evalBtn
     belowPrevBtn.style.display = 'none';
     belowNextBtn.style.display = 'none';
+    // Reset margins that might be applied in specific cases
+    belowPrevBtn.style.marginRight = '';
+    belowBackToOutlineBtn.style.marginRight = ''; // For the middle "Back" button
+
+    const existingEvalBtn = document.getElementById('courseEvalBtn');
+    if (existingEvalBtn) {
+        existingEvalBtn.style.display = 'none'; // Hide by default, will be shown if needed
+    }
+
+    // Determine if this is the specific case for flex layout
+    const isFlexCaseThreeButtons = (showingQuiz && currentIndex === 4);
+
+    // Manage the display style of the container div (belowBackBtnDiv)
+    // It's made visible (display: 'block') by showLesson/showQuiz.
+    // Here, we adjust its internal layout (flex or block).
+    if (belowBackBtnDiv.style.display !== 'none') { // Only if the container is meant to be visible
+        belowBackBtnDiv.style.justifyContent = ''; // Reset justify content
+        belowBackBtnDiv.style.alignItems = '';   // Reset align items
+        belowBackBtnDiv.style.display = isFlexCaseThreeButtons ? 'flex' : 'block'; // Set to flex only for the specific case
+    }
 
     // LESSON VIEW
     if (!showingQuiz) {
@@ -202,47 +223,30 @@ document.addEventListener('DOMContentLoaded', () => {
         belowNextBtn.onclick = () => showLesson(4);
       }
       else if (currentIndex === 4) {
-        // Lesson 5: Show ← Lesson 4, Evaluation →, Back
+        // Lesson 5: ← Lesson 4, Take the Quiz: After Lesson 5 →, Back
         belowPrevBtn.style.display = 'inline-block';
         belowPrevLabel.textContent = '← ' + lessons[3].shortTitle;
         belowPrevBtn.onclick = () => showLesson(3);
 
         belowNextBtn.style.display = 'inline-block';
-        belowNextLabel.textContent = 'Evaluation →';
-        belowNextBtn.onclick = () => {
-          // Show the evaluation form in the viewer
-          pdfViewer.style.display = 'block';
-          belowBackBtnDiv.style.display = 'block';
-          courseOutline.style.display = 'none';
-          pdfCanvas.style.display = 'none';
-          if (pdfControlsTop) pdfControlsTop.style.display = 'none';
-          if (pdfControlsBottom) pdfControlsBottom.style.display = 'none';
-          pdfStatusMessage.style.display = 'none';
-          formViewer.src = 'https://forms.gle/J1GYecjTdYnjpAzf9'; // Your evaluation form link
-          formViewer.style.display = 'block';
-
-          // Optionally, update below navigation to only show Back
-          belowPrevBtn.style.display = 'none';
-          belowNextBtn.style.display = 'none';
-          belowBackToOutlineBtn.style.display = 'inline-block';
-          // If you want to hide the next button after click, keep above line
-        };
+        belowNextLabel.textContent = 'Take the Quiz: After Lesson 5 →';
+        belowNextBtn.onclick = () => showQuiz(4);
 
         belowBackToOutlineBtn.style.display = 'inline-block';
 
         // Hide the separate evaluation button if it exists
         const evalBtn = document.getElementById('courseEvalBtn');
-        if (evalBtn) evalBtn.style.display = 'none';
+        if (evalBtn) evalBtn.style.display = '20px';
       } else {
         // ...existing code for other lessons...
         belowBackToOutlineBtn.style.display = 'inline-block';
         const evalBtn = document.getElementById('courseEvalBtn');
-        if (evalBtn) evalBtn.style.display = 'none';
+        if (evalBtn) evalBtn.style.display = '20px';
       }
     }
     // QUIZ VIEW
     else {
-      // For quiz after lesson 2
+      // For quiz after lesson 2 (lessons[1].quiz, so currentIndex is 1)
       if (currentIndex === 1) {
         // Quiz after lesson 2: Lesson 2 / Back / Lesson 3
         belowPrevBtn.style.display = 'inline-block';
@@ -253,75 +257,62 @@ document.addEventListener('DOMContentLoaded', () => {
         belowNextLabel.textContent = lessons[2].shortTitle + ' →';
         belowNextBtn.onclick = () => showLesson(2);
       }
-      // For quiz after lesson 5 (Quiz: Lesson 3, 4 & 5)
-      else if (showingQuiz && currentIndex === 4) {
-        // Replicate Lesson 4 button layout: ← Lesson 5   Back   Lesson 5 →
+      // For quiz after lesson 5 (lessons[4].quiz, so currentIndex is 4)
+      else if (currentIndex === 4) { // This implies showingQuiz is true due to the outer else
+        // Quiz: After Lesson 5: ← Lesson 5, Back, Evaluation →
         belowPrevBtn.style.display = 'inline-block';
         belowPrevLabel.textContent = '← ' + lessons[4].shortTitle;
         belowPrevBtn.onclick = () => showLesson(4);
+        belowPrevBtn.style.marginRight = '20px'; // Adjust this value for desired spacing
 
-        belowBackToOutlineBtn.style.display = 'inline-block';
+        belowBackToOutlineBtn.style.display = 'inline-block'; // This is the "Back" (to outline) button
         belowBackToOutlineBtn.textContent = 'Back';
+        belowBackToOutlineBtn.style.marginRight = '20px'; // Adjust this value for desired spacing
 
-        belowNextBtn.style.display = 'inline-block';
-        belowNextLabel.textContent = lessons[4].shortTitle + ' →';
-        belowNextBtn.onclick = () => showLesson(4);
+        // Evaluation button
+        let evalBtn = document.getElementById('courseEvalBtn');
+        if (!evalBtn) {
+          evalBtn = document.createElement('button');
+          evalBtn.id = 'courseEvalBtn';
+          evalBtn.textContent = 'Evaluation →';
+          evalBtn.className = belowBackToOutlineBtn.className; // Copy styling
+          belowBackBtnDiv.appendChild(evalBtn);
+        }
+        evalBtn.style.display = 'inline-block';
+        evalBtn.style.marginRight = ''; // Ensure no margin for the last button in this row
+        evalBtn.onclick = () => {
+          // Show the evaluation form in the viewer
+          pdfViewer.style.display = 'block';
+          belowBackBtnDiv.style.display = 'block';
+          courseOutline.style.display = 'none';
+          pdfCanvas.style.display = 'none';
+          if (pdfControlsTop) pdfControlsTop.style.display = 'none';
+          if (pdfControlsBottom) pdfControlsBottom.style.display = 'none';
+          pdfStatusMessage.style.display = 'none';
+          formViewer.src = 'https://forms.gle/J1GYecjTdYnjpAzf9';
+          formViewer.style.display = 'block';
 
-        // Hide the evaluation button if it exists
-        const evalBtn = document.getElementById('courseEvalBtn');
-        if (evalBtn) evalBtn.style.display = 'none';
-      } else {
-        // Hide the evaluation button in all other cases
-        const evalBtn = document.getElementById('courseEvalBtn');
-        if (evalBtn) evalBtn.style.display = 'none';
+          // When evaluation form is shown, only "Back" (to outline) button is active in this bar
+          belowPrevBtn.style.display = 'none';
+          belowNextBtn.style.display = 'none';
+          belowBackToOutlineBtn.style.display = 'inline-block';
+          // Reset margins when only "Back" is shown after clicking "Evaluation ->"
+          belowPrevBtn.style.marginRight = '';
+          belowBackToOutlineBtn.style.marginRight = '';
+          if(evalBtn) evalBtn.style.display = 'none'; // Hide the "Evaluation ->" button itself
+
+          // Reset container styling from flex to block (as it now likely has only one button)
+          belowBackBtnDiv.style.display = 'block';
+          belowBackBtnDiv.style.justifyContent = ''; // Reset
+          belowBackBtnDiv.style.alignItems = '';   // Reset
+        };
+
+        // Apply flex properties for the three buttons to be in a row and spaced
+        // belowBackBtnDiv.style.display = 'flex'; // Already handled by the logic at the function start
+        belowBackBtnDiv.style.justifyContent = 'center'; // Center the group of buttons
+        belowBackBtnDiv.style.alignItems = 'center'; // Vertically align items in the center
       }
     }
-  }
-
-  // Add this function to handle showing the evaluation form in-app
-  function showCourseEvaluation() {
-    pdfViewer.style.display = 'block';
-    belowBackBtnDiv.style.display = 'block';
-    courseOutline.style.display = 'none';
-    pdfCanvas.style.display = 'none';
-    if (pdfControlsTop) pdfControlsTop.style.display = 'none';
-    if (pdfControlsBottom) pdfControlsBottom.style.display = 'none';
-    pdfStatusMessage.style.display = 'none';
-    formViewer.src = 'https://docs.google.com/forms/d/e/1FAIpQLSdKhnd7snTLgwzkNX1MuFoa51Iqy34enpUTywbSd5SwVfRwFA/viewform?usp=header';
-    formViewer.style.display = 'block';
-
-    // Update the below navigation buttons for evaluation view
-    updateBelowNavButtonsForEvaluation();
-  }
-
-  // Add this function to update the below navigation for evaluation view
-  function updateBelowNavButtonsForEvaluation() {
-    // Show: <- Lesson 5 / Course Outline / Go to Evaluate ->
-    belowPrevBtn.style.display = 'inline-block';
-    belowPrevLabel.textContent = '← ' + lessons[4].shortTitle;
-    belowPrevBtn.onclick = () => showLesson(4);
-
-    belowBackToOutlineBtn.style.display = 'inline-block';
-
-    // Add or show the evaluation button on the right, styled like Back to Course Outline
-    // let evalBtn = document.getElementById('courseEvalBtn');
-    // if (!evalBtn) {
-    //   evalBtn = document.createElement('button');
-    //   evalBtn.id = 'courseEvalBtn';
-    //   evalBtn.textContent = 'Go to Evaluate →';
-    //   evalBtn.className = belowBackToOutlineBtn.className; // Copy the style/class
-    //   evalBtn.style.marginLeft = 'auto'; // Push to right
-    //   evalBtn.style.float = 'right';     // Ensure right alignment
-    //   belowBackBtnDiv.appendChild(evalBtn);
-    // }
-    // evalBtn.style.display = 'inline-block';
-    // evalBtn.onclick = () => {
-    //   // Reload the evaluation form if needed
-    //   formViewer.src = 'https://docs.google.com/forms/d/e/1FAIpQLSdKhnd7snTLgwzkNX1MuFoa51Iqy34enpUTywbSd5SwVfRwFA/viewform?usp=header';
-    // };
-
-    // Hide the default next button
-    belowNextBtn.style.display = 'none';
   }
 
   // Click on lesson in course outline

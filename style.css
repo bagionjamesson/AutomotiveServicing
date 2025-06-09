@@ -791,3 +791,7 @@ function showQuiz(index) {
   // ...existing code...
   updateBelowNavButtons();
 }
+
+belowBackBtnDiv.appendChild(belowPrevBtn);           // ← Lesson 5
+belowBackBtnDiv.appendChild(belowBackToOutlineBtn);  // Back
+belowBackBtnDiv.appendChild(evalBtn);                // Evaluation →
