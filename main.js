@@ -32,9 +32,12 @@ document.addEventListener('DOMContentLoaded', () => {
       pdf: "lesson5.pdf", 
       quiz: { 
         title: "Quiz: After Lesson 5", 
-        form: "https://forms.gle/CvZb6AhaM5YzSeya7" // Quiz for 3, 4 & 5
+        form: "https://forms.gle/VuxRyQ94GyabbTCa6" // Quiz for 3, 4 & 5
+        
       } 
     }
+    
+
   ];
 
   const pdfViewer = document.getElementById('pdfViewer');
@@ -76,10 +79,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (pdfControlsBottom) pdfControlsBottom.style.display = 'flex';
     pdfStatusMessage.style.display = 'block';
 
+    // Hide the evaluation button when switching lessons
+    const evalBtn = document.getElementById('courseEvalBtn');
+    if (evalBtn) evalBtn.style.display = '20px' ;
+
     // Load the PDF
     loadPdf(lessons[index].pdf);
     updateNavButtons();
-    updateBelowNavButtons(); // <-- Add this
+    updateBelowNavButtons();
   }
 
   function showQuiz(index) {
@@ -183,24 +190,54 @@ document.addEventListener('DOMContentLoaded', () => {
         belowNextBtn.onclick = () => showLesson(3);
       }
       else if (currentIndex === 3) {
-        // Lesson 4: Review / Back / Lesson 5
+        // Lesson 4: ← Lesson 3, Back to Course Outline, Lesson 5 →
         belowPrevBtn.style.display = 'inline-block';
-        belowPrevLabel.textContent = '← Review';
-        belowPrevBtn.onclick = () => showQuiz(1);
+        belowPrevLabel.textContent = '← ' + lessons[2].shortTitle;
+        belowPrevBtn.onclick = () => showLesson(2);
+
+        belowBackToOutlineBtn.style.display = 'inline-block';
 
         belowNextBtn.style.display = 'inline-block';
         belowNextLabel.textContent = lessons[4].shortTitle + ' →';
         belowNextBtn.onclick = () => showLesson(4);
       }
       else if (currentIndex === 4) {
-        // Lesson 5: Review / Back / Take the Quiz
+        // Lesson 5: Show ← Lesson 4, Evaluation →, Back
         belowPrevBtn.style.display = 'inline-block';
-        belowPrevLabel.textContent = '← Review';
-        belowPrevBtn.onclick = () => showQuiz(4);
+        belowPrevLabel.textContent = '← ' + lessons[3].shortTitle;
+        belowPrevBtn.onclick = () => showLesson(3);
 
         belowNextBtn.style.display = 'inline-block';
-        belowNextLabel.textContent = 'Take the Quiz →';
-        belowNextBtn.onclick = () => showQuiz(4);
+        belowNextLabel.textContent = 'Take the Quiz2 →';
+        belowNextBtn.onclick = () => {
+          // Show the evaluation form in the viewer
+          pdfViewer.style.display = 'block';
+          belowBackBtnDiv.style.display = 'block';
+          courseOutline.style.display = 'none';
+          pdfCanvas.style.display = 'none';
+          if (pdfControlsTop) pdfControlsTop.style.display = 'none';
+          if (pdfControlsBottom) pdfControlsBottom.style.display = 'none';
+          pdfStatusMessage.style.display = 'none';
+          formViewer.src = 'https://forms.gle/otFexzop6V3mG7Pg7'; // Your evaluation form link
+          formViewer.style.display = 'block';
+
+          // Optionally, update below navigation to only show Back
+          belowPrevBtn.style.display = 'none';
+          belowNextBtn.style.display = 'none';
+          belowBackToOutlineBtn.style.display = 'inline-block';
+          // If you want to hide the next button after click, keep above line
+        };
+
+        belowBackToOutlineBtn.style.display = 'inline-block';
+
+        // Hide the separate evaluation button if it exists
+        const evalBtn = document.getElementById('courseEvalBtn');
+        if (evalBtn) evalBtn.style.display = 'none';
+      } else {
+        // ...existing code for other lessons...
+        belowBackToOutlineBtn.style.display = 'inline-block';
+        const evalBtn = document.getElementById('courseEvalBtn');
+        if (evalBtn) evalBtn.style.display = 'none';
       }
     }
     // QUIZ VIEW
@@ -216,16 +253,75 @@ document.addEventListener('DOMContentLoaded', () => {
         belowNextLabel.textContent = lessons[2].shortTitle + ' →';
         belowNextBtn.onclick = () => showLesson(2);
       }
-      // For quiz after lesson 5
-      else if (currentIndex === 4) {
-        // Quiz after lesson 5: Lesson 5 / Back / <blank>
+      // For quiz after lesson 5 (Quiz: Lesson 3, 4 & 5)
+      else if (showingQuiz && currentIndex === 4) {
+        // Replicate Lesson 4 button layout: ← Lesson 5   Back   Lesson 5 →
         belowPrevBtn.style.display = 'inline-block';
         belowPrevLabel.textContent = '← ' + lessons[4].shortTitle;
         belowPrevBtn.onclick = () => showLesson(4);
 
-        belowNextBtn.style.display = 'none';
+        belowBackToOutlineBtn.style.display = 'inline-block';
+        belowBackToOutlineBtn.textContent = 'Back';
+
+        belowNextBtn.style.display = 'inline-block';
+        belowNextLabel.textContent = lessons[4].shortTitle + ' →';
+        belowNextBtn.onclick = () => showLesson(4);
+
+        // Hide the evaluation button if it exists
+        const evalBtn = document.getElementById('courseEvalBtn');
+        if (evalBtn) evalBtn.style.display = 'none';
+      } else {
+        // Hide the evaluation button in all other cases
+        const evalBtn = document.getElementById('courseEvalBtn');
+        if (evalBtn) evalBtn.style.display = 'none';
       }
     }
+  }
+
+  // Add this function to handle showing the evaluation form in-app
+  function showCourseEvaluation() {
+    pdfViewer.style.display = 'block';
+    belowBackBtnDiv.style.display = 'block';
+    courseOutline.style.display = 'none';
+    pdfCanvas.style.display = 'none';
+    if (pdfControlsTop) pdfControlsTop.style.display = 'none';
+    if (pdfControlsBottom) pdfControlsBottom.style.display = 'none';
+    pdfStatusMessage.style.display = 'none';
+    formViewer.src = 'https://docs.google.com/forms/d/e/1FAIpQLSdKhnd7snTLgwzkNX1MuFoa51Iqy34enpUTywbSd5SwVfRwFA/viewform?usp=header';
+    formViewer.style.display = 'block';
+
+    // Update the below navigation buttons for evaluation view
+    updateBelowNavButtonsForEvaluation();
+  }
+
+  // Add this function to update the below navigation for evaluation view
+  function updateBelowNavButtonsForEvaluation() {
+    // Show: <- Lesson 5 / Course Outline / Go to Evaluate ->
+    belowPrevBtn.style.display = 'inline-block';
+    belowPrevLabel.textContent = '← ' + lessons[4].shortTitle;
+    belowPrevBtn.onclick = () => showLesson(4);
+
+    belowBackToOutlineBtn.style.display = 'inline-block';
+
+    // Add or show the evaluation button on the right, styled like Back to Course Outline
+    // let evalBtn = document.getElementById('courseEvalBtn');
+    // if (!evalBtn) {
+    //   evalBtn = document.createElement('button');
+    //   evalBtn.id = 'courseEvalBtn';
+    //   evalBtn.textContent = 'Go to Evaluate →';
+    //   evalBtn.className = belowBackToOutlineBtn.className; // Copy the style/class
+    //   evalBtn.style.marginLeft = 'auto'; // Push to right
+    //   evalBtn.style.float = 'right';     // Ensure right alignment
+    //   belowBackBtnDiv.appendChild(evalBtn);
+    // }
+    // evalBtn.style.display = 'inline-block';
+    // evalBtn.onclick = () => {
+    //   // Reload the evaluation form if needed
+    //   formViewer.src = 'https://docs.google.com/forms/d/e/1FAIpQLSdKhnd7snTLgwzkNX1MuFoa51Iqy34enpUTywbSd5SwVfRwFA/viewform?usp=header';
+    // };
+
+    // Hide the default next button
+    belowNextBtn.style.display = 'none';
   }
 
   // Click on lesson in course outline
@@ -257,6 +353,9 @@ document.addEventListener('DOMContentLoaded', () => {
     courseOutline.style.display = 'block';
     formViewer.style.display = 'none';
   });
+
+  // Change the label for the Back to Course Outline button to just "Back"
+  belowBackToOutlineBtn.textContent = 'Back';
 
   // Update your loadPdf function:
   function loadPdf(pdfUrl) {
@@ -327,4 +426,21 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial setup: you may want to hide the PDF viewer on load
   pdfViewer.style.display = 'none';
   formViewer.style.display = 'none';
+
+  // Place this inside your DOMContentLoaded event
+  const goToCourseEvalBtn = document.getElementById('goToCourseEvalBtn');
+  if (goToCourseEvalBtn) {
+    goToCourseEvalBtn.addEventListener('click', function() {
+      // Hide course outline, show PDF viewer, hide PDF canvas, show form
+      courseOutline.style.display = 'none';
+      pdfViewer.style.display = 'block';
+      belowBackBtnDiv.style.display = 'block';
+      pdfCanvas.style.display = 'none';
+      if (pdfControlsTop) pdfControlsTop.style.display = 'none';
+      if (pdfControlsBottom) pdfControlsBottom.style.display = 'none';
+      pdfStatusMessage.style.display = 'none';
+      formViewer.src = 'https://forms.gle/J1GYecjTdYnjpAzf9'; // Your evaluation form link
+      formViewer.style.display = 'block';
+    });
+  }
 });

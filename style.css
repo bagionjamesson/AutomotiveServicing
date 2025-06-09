@@ -766,6 +766,23 @@ canvas#pdf-canvas { /* Made selector more specific for clarity */
   vertical-align: middle;
 }
 
+#below-pdf-back-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 304px; /* or 24px, adjust as needed */
+  flex-wrap: nowrap;
+}
+
+#belowPrevBtn,
+#belowBackToOutlineBtn,
+#courseEvalBtn {
+  display: inline-block;
+  white-space: nowrap;
+  vertical-align: middle;
+  margin: 0;
+}
+
 function showLesson(index) {
   // ...existing code...
   updateBelowNavButtons();
