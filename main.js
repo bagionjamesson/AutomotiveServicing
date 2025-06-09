@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
         belowPrevBtn.onclick = () => showLesson(3);
 
         belowNextBtn.style.display = 'inline-block';
-        belowNextLabel.textContent = 'Take the Quiz2 →';
+        belowNextLabel.textContent = 'Evaluation →';
         belowNextBtn.onclick = () => {
           // Show the evaluation form in the viewer
           pdfViewer.style.display = 'block';
@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (pdfControlsTop) pdfControlsTop.style.display = 'none';
           if (pdfControlsBottom) pdfControlsBottom.style.display = 'none';
           pdfStatusMessage.style.display = 'none';
-          formViewer.src = 'https://forms.gle/otFexzop6V3mG7Pg7'; // Your evaluation form link
+          formViewer.src = 'https://forms.gle/J1GYecjTdYnjpAzf9'; // Your evaluation form link
           formViewer.style.display = 'block';
 
           // Optionally, update below navigation to only show Back
