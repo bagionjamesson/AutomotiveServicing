@@ -1,10 +1,15 @@
+/* ==========================================================================
+   Global Styles
+   ========================================================================== */
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
   background-color: #f9f9f9;
 }
 
-/* --- NAVBAR SIMPLE STYLE WITH LOGO --- */
+/* ==========================================================================
+   Navbar
+   ========================================================================== */
 .navbar {
   background: #285197;
   padding: 0 24px;
@@ -173,9 +178,11 @@ body {
     min-width: 100%;
   }
 }
-
 /* --- END NAVBAR --- */
 
+/* ==========================================================================
+   Main Section Layout
+   ========================================================================== */
 .main-section {
   display: flex;
   flex-wrap: wrap;
@@ -184,7 +191,9 @@ body {
   background-color: #ffffff;
 }
 
-/* --- PDF Viewer Responsive --- */
+/* ==========================================================================
+   PDF Viewer
+   ========================================================================== */
 .pdf-viewer {
   flex: 1 1 80%;
   display: flex;
@@ -202,18 +211,18 @@ body {
 }
 
 canvas#pdf-canvas {
-  display: block;
+  display: none; /* Initially hidden, shown by JS */
   width: 100%;
-  max-width: 900px;      /* Increased from 650px */
+  max-width: 900px;
   height: auto;
-  max-height: 85vh;      /* Increased from 75vh */
+  max-height: 85vh;
   margin: 0 auto;
   border: 1px solid #e0e0e0;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 1px 6px rgba(0,0,0,0.06);
   object-fit: contain;
-  overflow: hidden;
+  overflow: hidden; /* Ensures content within canvas respects border-radius */
 }
 
 @media (max-width: 1200px) {
@@ -250,10 +259,16 @@ canvas#pdf-canvas {
 .pdf-viewer [class*="nav"] {
   display: none !important;
 }
+#pdf-status-message {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+/* --- END PDF Viewer --- */
 
-/* --- END PDF Viewer Responsive --- */
-
-.course-outline {
+/* ==========================================================================
+   Course Outline & Sidebar
+   ========================================================================== */
+.course-outline { /* Container for the entire course outline section including sidebar */
   max-width: 700px;      /* Prevents the box from being too wide */
   width: 100%;
   margin: 32px auto 0 auto;
@@ -265,12 +280,12 @@ canvas#pdf-canvas {
   word-break: break-word; /* Ensures long text wraps */
   box-sizing: border-box;
 }
-
 .course-outline h1 {
   font-size: 1.5rem;
   margin-bottom: 12px;
 }
 
+/* Course Sidebar (within .course-outline or standalone if design changes) */
 .course-sidebar {
   background-color: #f8f9fa;
   padding: 10px 8px;
@@ -281,11 +296,9 @@ canvas#pdf-canvas {
   flex-direction: column;
   gap: 6px; /* Compact but readable */
 }
-
 .course-sidebar > *:last-child {
   margin-bottom: 0 !important;
 }
-
 .unit-title {
   font-size: 1.08rem;
   margin: 16px 0 6px 0;
@@ -293,6 +306,7 @@ canvas#pdf-canvas {
   color: #285197;
 }
 
+/* General Item Styling (Lesson, Test, Evaluation) */
 .lesson-item,
 .test-item.test-highlight,
 .evaluation-slot {
@@ -300,7 +314,6 @@ canvas#pdf-canvas {
   word-break: break-word;
   min-width: 0;
 }
-
 .lesson-item {
   display: flex;
   align-items: center;
@@ -313,35 +326,125 @@ canvas#pdf-canvas {
   border: 1px solid #e9ecef;
   min-height: 36px;
 }
-
 .lesson-item:last-child,
 .test-item.test-highlight:last-child {
   margin-bottom: 0;
 }
-
 .lesson-item:hover,
 .test-item.test-highlight:hover {
   background-color: #f3f3f3;
 }
 
-.lesson-title,
+
+
+
+/* Lesson Specific */
+.lesson-icon {
+  margin-right: 12px;
+  font-size: 1.1em;
+  width: 20px; /* Ensure alignment */
+  text-align: center;
+}
+.lesson-title {
+  flex-grow: 1;
+  font-size: 1rem; /* Combined from previous .lesson-title, .test-title */
+}
+.lesson-status {
+  font-size: 0.9em;
+  margin-left: 10px;
+  white-space: nowrap;
+}
+
+/* Test Item Specific */
+.test-item.test-highlight {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fffbe6;
+  border: 1px solid #ffe066;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 8px 0;
+  font-weight: bold;
+  color: #b8860b;
+  box-shadow: 0 1px 3px rgba(255, 215, 0, 0.08);
+}
 .test-title {
   flex-grow: 1;
-  font-size: 1rem;
+  font-size: 1rem; /* Combined from previous .lesson-title, .test-title */
+  letter-spacing: 1px;
 }
-
-.take-test-btn,
-.back-to-outline-btn {
-  margin-left: 8px;
-}
-
 .take-test-btn {
-  padding: 5px 14px;
-  font-size: 0.97rem;
-  border-radius: 7px;
+  margin-left: 16px;
+  padding: 6px 18px;
+  background-color: #ffd600;
+  color: #333;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.97rem; /* From earlier definition */
+  transition: background 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.take-test-btn:hover {
+  background-color: #ffe066;
 }
 
-.back-to-outline-btn {
+/* Evaluation Specific */
+.evaluation-slot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #e6fff2; /* light green background */
+  border: 1.5px solid #43b66e; /* green border */
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 8px 0;
+  font-weight: bold;
+  color: #218c4a; /* dark green text */
+  box-shadow: 0 1px 3px rgba(67, 182, 110, 0.08);
+}
+.evaluation-slot .test-title { /* Reusing .test-title for consistency, but styled for evaluation */
+  font-size: 1rem;
+  letter-spacing: 1px;
+  color: #218c4a;
+}
+
+.go-btn { /* Button for "Go to Evaluation" or similar */
+  margin-left: 16px;
+  padding: 6px 22px;
+  background-color: #43b66e; /* Changed to green */
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: background 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.go-btn:hover {
+  background-color: #2e8b57;
+}
+.go-hint { /* Small hint text like "GO!" */
+  background: #43b66e;        /* Green background */
+  color: #fff;                /* White text */
+  border-radius: 12px;
+  padding: 2px 10px;
+  font-size: 0.95em;
+  font-weight: bold;
+  margin-left: 8px;
+  border: none;
+}
+
+/* Back Buttons related to Course Outline flow */
+.back-btn-container { /* General container for back buttons if needed */
+  display: flex;
+  justify-content: flex-start;
+  margin: 8px 0 0 0; /* Reduced from 24px to 8px */
+}
+.back-to-modules-btn {
   display: flex;
   align-items: center;
   background: #fffbe6;
@@ -356,16 +459,17 @@ canvas#pdf-canvas {
   transition: background 0.2s, color 0.2s;
   gap: 8px;
   width: fit-content;
-  margin: 18px auto 0 auto;
+  margin-top: 8px !important; /* Reduce if still too much space */
 }
-
-.back-to-outline-btn:hover {
+.back-to-modules-btn:hover {
   background: #ffe066;
   color: #856404;
 }
+/* --- END Course Outline & Sidebar --- */
 
-/* --- END Course Outline Compact Spacing --- */
-
+/* ==========================================================================
+   PDF Controls & Below-PDF Navigation
+   ========================================================================== */
 #pdf-controls-top,
 #pdf-controls-bottom {
   display: flex;
@@ -377,13 +481,11 @@ canvas#pdf-canvas {
   background: #f1f1f1;
   border-bottom: 1px solid #ddd;
 }
-
 #pdf-controls-bottom {
   border-bottom: none;
   border-top: 1px solid #ddd;
   margin-top: 16px;
 }
-
 #pdf-controls-top button,
 #pdf-controls-bottom button {
   background-color: #285197;
@@ -402,19 +504,16 @@ canvas#pdf-canvas {
   align-items: center;
   justify-content: center;
 }
-
 #pdf-controls-top button:hover,
 #pdf-controls-bottom button:hover {
   background-color: #ffc107;
   color: #222;
 }
-
 #pdf-controls-top button:active,
 #pdf-controls-bottom button:active {
   background-color: #1d3c6a;
   color: #fff;
 }
-
 #pdf-controls-top button:disabled,
 #pdf-controls-bottom button:disabled {
   background-color: #b0b8c1;
@@ -422,274 +521,24 @@ canvas#pdf-canvas {
   cursor: not-allowed;
   opacity: 0.7;
 }
-
 #pdf-controls-top span,
 #pdf-controls-bottom span {
   font-size: 16px;
   color: #333;
 }
-
 .pdf-controls-spacer {
   flex: 1;
 }
 
-canvas#pdf-canvas { /* Made selector more specific for clarity */
-  border: 1px solid #ccc;
-  width: 100%;
-  display: none; /* Initially hidden, shown by JS */
-}
-
-.lesson-icon {
-  margin-right: 12px;
-  font-size: 1.1em;
-  width: 20px; /* Ensure alignment */
-  text-align: center;
-}
-
-.lesson-title {
-  flex-grow: 1;
-}
-
-.lesson-status {
-  font-size: 0.9em;
-  margin-left: 10px;
-  white-space: nowrap;
-}
-
-#pdf-status-message {
-  font-size: 14px;
-  margin-bottom: 10px;
-}
-
-.footer {
-  background-color: #285197; /* Match navbar background */
-  color: #ffffff;
-  padding: 40px 20px;
-}
-
-.footer-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 30px;
-}
-
-.footer h3{
-  font-size: 18px;
-  margin-bottom: 15px;
-}
-.footer h3 {
-  position: relative;
-}
-.footer h3::after {
-  content: "";
-  display: block; /* Changed to block */
-  height: 3px;
-  width: 36px;
-  background: #FFD600;
-  border-radius: 2px;
-  margin-top: 4px;
-  position: absolute;
-  left: 0;
-  bottom: -8px;
-}
-
-.footer p,
-.footer a,
-.footer li {
-  font-size: 14px;
-  color: #cccccc;
-  text-decoration: none;
-  line-height: 1.8;
-}
-.footer a:hover {
-  color: #ffc107;
-}
-
-.footer ul {
-  list-style: none;
-  padding-left: 0;
-}
-
-
-
-.test-item.test-highlight {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #fffbe6;
-  border: 1px solid #ffe066;
-  border-radius: 8px;
-  padding: 12px 16px;
-  margin: 8px 0;
-  font-weight: bold;
-  color: #b8860b;
-  box-shadow: 0 1px 3px rgba(255, 215, 0, 0.08);
-}
-
-.test-item.test-highlight .test-title {
-  font-size: 1rem;
-  letter-spacing: 1px;
-}
-
-.take-test-btn {
-  margin-left: 16px;
-  padding: 6px 18px;
-  background-color: #ffd600;
-  color: #333;
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background 0.2s;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-}
-.take-test-btn:hover {
-  background-color: #ffe066;
-}
-
-.back-btn-container {
-  display: flex;
-  justify-content: flex-start;
-  margin: 8px 0 0 0; /* Reduced from 24px to 8px */
-}
-
-.back-to-modules-btn {
-  display: flex;
-  align-items: center;
-  background: #fffbe6;
-  color: #b8860b;
-  border: 1px solid #ffe066;
-  border-radius: 20px;
-  padding: 8px 22px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 1px 3px rgba(255, 215, 0, 0.08);
-  transition: background 0.2s, color 0.2s;
-  gap: 8px;
-  width: fit-content;
-  margin-top: 8px !important; /* Reduce if still too much space */
-}
-
-.back-to-modules-btn:hover {
-  background: #ffe066;
-  color: #856404;
-}
-
-.evaluation-btn {
-  margin-left: 16px;
-  padding: 6px 22px;
-  background-color: #ffd600;      /* Yellow background */
-  color: #333;                    /* Dark text */
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 1rem;
-  transition: background 0.2s;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.evaluation-btn:hover {
-  background-color: #ffe066;
-}
-
-.go-hint {
-  background: #43b66e;        /* Green background */
-  color: #fff;                /* White text */
-  border-radius: 12px;
-  padding: 2px 10px;
-  font-size: 0.95em;
-  font-weight: bold;
-  margin-left: 8px;
-  border: none;
-}
-
-.evaluation-slot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #e6fff2; /* light green background */
-  border: 1.5px solid #43b66e; /* green border */
-  border-radius: 8px;
-  padding: 12px 16px;
-  margin: 8px 0;
-  font-weight: bold;
-  color: #218c4a; /* dark green text */
-  box-shadow: 0 1px 3px rgba(67, 182, 110, 0.08);
-}
-
-.evaluation-slot .test-title {
-  font-size: 1rem;
-  letter-spacing: 1px;
-  color: #218c4a;
-}
-
-.go-btn {
-  margin-left: 16px;
-  padding: 6px 22px;
-  background-color: #43b66e;
-  color: #fff;
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 1rem;
-  transition: background 0.2s;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-}
-.go-btn:hover {
-  background-color: #2e8b57;
-}
-
-.yellow-btn {
-  background-color: #ffd600;
-  color: #222;
-  border: none;
-  padding: 10px 22px;
-  border-radius: 5px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.yellow-btn:hover {
-  background-color: #ffe066;
-}
-
-.back-to-outline-btn {
-  display: flex;
-  align-items: center;
-  background: #fffbe6;
-  color: #b8860b;
-  border: 1px solid #ffe066;
-  border-radius: 20px;
-  padding: 8px 22px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 1px 3px rgba(255, 215, 0, 0.08);
-  transition: background 0.2s, color 0.2s;
-  gap: 8px;
-  width: fit-content;
-  margin: 18px auto 0 auto;
-}
-
-.back-to-outline-btn:hover {
-  background: #ffe066;
-  color: #856404;
-}
-
-.pdf-viewer-actions {
+/* Actions/Navigation below the PDF viewer */
+.pdf-viewer-actions { /* Container for buttons like Prev/Next Lesson, Back to Outline */
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 12px;
   margin: 18px auto 0 auto;
 }
-
-.nav-btn {
+.nav-btn { /* General style for navigation buttons in .pdf-viewer-actions */
   background: #fffbe6;
   color: #b8860b;
   border: 1px solid #ffe066;
@@ -709,8 +558,7 @@ canvas#pdf-canvas { /* Made selector more specific for clarity */
   color: #856404;
 }
 
-/* --- END PDF CONTROLS --- */
-
+/* Alternative/Specific Below PDF Navigation Structure */
 .below-nav-flex {
   display: flex;
   justify-content: center;
@@ -720,7 +568,6 @@ canvas#pdf-canvas { /* Made selector more specific for clarity */
   margin: 0 auto;
   width: 100%;
 }
-
 .below-nav-left,
 .below-nav-center,
 .below-nav-right {
@@ -729,9 +576,7 @@ canvas#pdf-canvas { /* Made selector more specific for clarity */
   justify-content: center;
   align-items: center;
 }
-
-/* Optional: prevent buttons from stretching too wide */
-.below-nav-left,
+.below-nav-left, /* Optional: prevent buttons from stretching too wide */
 .below-nav-right {
   min-width: 120px;
   max-width: 220px;
@@ -739,13 +584,11 @@ canvas#pdf-canvas { /* Made selector more specific for clarity */
 .below-nav-center {
   min-width: 220px;
 }
-
-#belowPrevBtn,
+#belowPrevBtn, /* Specific ID styles for buttons within .below-nav-flex */
 #belowBackToOutlineBtn,
 #belowNextBtn {
   margin: 0 12px;
 }
-
 #belowPrevLabel,
 #belowNextLabel {
   white-space: nowrap;
@@ -755,9 +598,7 @@ canvas#pdf-canvas { /* Made selector more specific for clarity */
   display: inline-block;
   vertical-align: middle;
 }
-
-/* Allow wrapping for the Back to Course Outline button */
-#belowBackToOutlineBtn {
+#belowBackToOutlineBtn { /* Allow wrapping for the Back to Course Outline button */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -765,33 +606,150 @@ canvas#pdf-canvas { /* Made selector more specific for clarity */
   display: inline-block;
   vertical-align: middle;
 }
-
-#below-pdf-back-btn {
+#below-pdf-back-btn { /* Another specific layout for below PDF buttons */
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 304px; /* or 24px, adjust as needed */
   flex-wrap: nowrap;
 }
-
-#belowPrevBtn,
+#belowPrevBtn, /* Ensure these are styled if used in #below-pdf-back-btn context */
 #belowBackToOutlineBtn,
-#courseEvalBtn {
+#courseEvalBtn { /* Assuming #courseEvalBtn is styled like other nav buttons or has its own style */
   display: inline-block;
   white-space: nowrap;
   vertical-align: middle;
   margin: 0;
 }
+/* --- END PDF Controls & Below-PDF Navigation --- */
 
-function showLesson(index) {
-  // ...existing code...
-  updateBelowNavButtons();
+/* ====== SECTION 3: FOOTER ====== */
+.footer { /* Was .footer-section */
+  background: #285197; /* Darker background like live site */
+  color: #cccccc; /* Light gray fallback text color like live site */
+  padding: 48px 0 24px 0;
+  text-align: center;
 }
-function showQuiz(index) {
-  // ...existing code...
-  updateBelowNavButtons();
+.footer-grid { /* Was .footer-columns */
+  display: flex;
+  justify-content: center;
+  gap: 32px; /* Adjusted gap like live site (2rem) */
+  flex-wrap: wrap;
+  margin-bottom: 0;
+  padding-left: 20px; /* Add some padding to prevent content flush against edge */
+  padding-right: 20px;/* Add some padding to prevent content flush against edge */
+}
+.footer-grid > div { /* Was .footer-col, targets direct div children of .footer-grid */
+  min-width: 220px;
+  text-align: left;
+  flex: 1 1 0;
+  background: #285197; /* Card background like live site */
+  border-radius: 14px;  /* Live site card radius */
+  box-shadow: 0 4px 18px rgba(40,81,151,0.18); /* Live site card shadow */
+  padding: 24px 18px; /* Live site card padding */
+  margin: 0; /* Rely on parent gap for spacing */
+  color: #fff; /* Default text color for elements inside */
+}
+/* Removed .footer-col:hover as live site doesn't change these properties on hover */
+
+/* Styles for h3 within footer columns.
+   The .footer-header class is not used here as HTML structure is div > h3 */
+.footer-grid > div h3 {
+  color: #ffffff; /* Live site heading color */
+  font-size: 1.1em;
+  font-weight: 700;
+  margin-bottom: 12px;
+  position: relative;
+   display: inline-block; /* Important for positioning the underline span if it's a child */
+}
+.footer-grid > div ul { /* Was .footer-col ul */
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px 0;
+}
+.footer-grid > div ul li { /* Was .footer-col ul li */
+  margin-bottom: 10px;
+}
+.footer-grid > div ul li a { /* Was .footer-col ul li a */
+  color: #ffffff; /* Live site link color */
+  text-decoration: none;
+  font-size: 1em;
+  transition: color 0.2s;
+}
+.footer-grid > div ul li a:hover {
+  color: #FFD600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+/* Styles for contact paragraphs. Add class="footer-contact" to <p> tags in HTML for these to apply. */
+.footer-contact {
+  color: #ffffff; /* Live site contact text color */
+  font-size: 1em;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
 }
 
-belowBackBtnDiv.appendChild(belowPrevBtn);           // ← Lesson 5
-belowBackBtnDiv.appendChild(belowBackToOutlineBtn);  // Back
-belowBackBtnDiv.appendChild(evalBtn);                // Evaluation →
+.footer-bottom {
+  text-align: center;
+  font-size: 0.98em; /* Was 0.9em, adjusted to new spec */
+  color: #b3c6e0;   /* Was #cccccc, adjusted to new spec */
+  margin-top: 0;    /* Was 20px for p, now for .footer-bottom */
+  padding-bottom: 18px; /* Was 20px, adjusted to new spec */
+}
+.footer-bottom hr { /* Style for the hr in footer bottom */
+    border: none;
+    border-top: 1px solid #3b4e7a; /* Color from new spec */
+    margin: 24px auto 12px auto; /* Margins from new spec, auto for horizontal centering */
+    width: 50%; /* Retaining width from previous step to keep it centered and not full-width */
+}
+.footer-bottom p { /* Styles for the copyright paragraph */
+  color: #b3c6e0;   /* Ensuring consistency if color was on .footer-bottom */
+  font-size: inherit; /* Inherit size from .footer-bottom */
+  margin-top: 12px; /* Space between hr and text, adjusted from hr's bottom margin */
+  margin-bottom: 0;
+}
+
+.footer-underline { /* This targets <span class="footer-underline"></span> */
+  display: block;
+  height: 3px;        /* Live site style */
+  width: 36px;        /* Live site style */
+  background: #FFD600;
+  border-radius: 2px;
+  margin-top: 4px;
+  margin-bottom: 16px;
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 900px) {
+  .footer-grid { /* Was .footer-columns */
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+  .footer-grid > div { /* Was .footer-col */
+    min-width: 0;
+    width: 90%; /* Give some space on sides */
+    max-width: 400px; /* Prevent them from becoming too wide */
+    margin-left: auto; /* Centering the column itself when stacked */
+    margin-right: auto; /* Centering the column itself when stacked */
+  }
+}
+
+/* ==========================================================================
+   Utility Button Styles
+   ========================================================================== */
+.yellow-btn {
+  background-color: #ffd600;
+  color: #222;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.yellow-btn:hover {
+  background-color: #ffe066;
+}
+/* --- END Utility Button Styles --- */

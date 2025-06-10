@@ -35,6 +35,14 @@ document.addEventListener('DOMContentLoaded', () => {
         form: "https://forms.gle/VuxRyQ94GyabbTCa6" // Quiz for 3, 4 & 5
         
       } 
+    },
+    { 
+      title: "Course Evaluation", 
+      shortTitle: "Course Evaluation", 
+      quiz: { 
+        title: "Course Evaluation", 
+        form: "https://forms.gle/J1GYecjTdYnjpAzf9" // Course evaluation form
+      } 
     }
     
 
@@ -81,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Hide the evaluation button when switching lessons
     const evalBtn = document.getElementById('courseEvalBtn');
-    if (evalBtn) evalBtn.style.display = '200px' ;
+    if (evalBtn) evalBtn.style.display = 'none' ; // Corrected: 'none' to hide, based on comment
 
     // Load the PDF
     loadPdf(lessons[index].pdf);
@@ -134,9 +142,10 @@ document.addEventListener('DOMContentLoaded', () => {
       // Next: show quiz if next is a quiz
       else if (currentIndex < lessons.length - 1 && lessons[currentIndex + 1].quiz) {
         nextBtn.style.display = 'flex';
-        nextLabel.textContent = 'Take the Quiz →';
+        nextLabel.textContent = 'Take the Quiz 1 →';
         nextBtn.onclick = () => showQuiz(currentIndex);
       }
+      //
     }
     // QUIZ VIEW
     else {
@@ -169,18 +178,6 @@ document.addEventListener('DOMContentLoaded', () => {
         existingEvalBtn.style.display = 'none'; // Hide by default, will be shown if needed
     }
 
-    // Determine if this is the specific case for flex layout
-    const isFlexCaseThreeButtons = (showingQuiz && currentIndex === 4);
-
-    // Manage the display style of the container div (belowBackBtnDiv)
-    // It's made visible (display: 'block') by showLesson/showQuiz.
-    // Here, we adjust its internal layout (flex or block).
-    if (belowBackBtnDiv.style.display !== 'none') { // Only if the container is meant to be visible
-        belowBackBtnDiv.style.justifyContent = ''; // Reset justify content
-        belowBackBtnDiv.style.alignItems = '';   // Reset align items
-        belowBackBtnDiv.style.display = isFlexCaseThreeButtons ? 'flex' : 'block'; // Set to flex only for the specific case
-    }
-
     // LESSON VIEW
     if (!showingQuiz) {
       if (currentIndex === 0) {
@@ -197,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
         belowPrevBtn.onclick = () => showLesson(0);
 
         belowNextBtn.style.display = 'inline-block';
-        belowNextLabel.textContent = 'Take the Quiz →';
+        belowNextLabel.textContent = 'Take the Quiz 1→';
         belowNextBtn.onclick = () => showQuiz(1);
       }
       else if (currentIndex === 2) {
@@ -229,19 +226,19 @@ document.addEventListener('DOMContentLoaded', () => {
         belowPrevBtn.onclick = () => showLesson(3);
 
         belowNextBtn.style.display = 'inline-block';
-        belowNextLabel.textContent = 'Take the Quiz: After Lesson 5 →';
+        belowNextLabel.textContent = 'Quiz 2 →';
         belowNextBtn.onclick = () => showQuiz(4);
 
         belowBackToOutlineBtn.style.display = 'inline-block';
 
         // Hide the separate evaluation button if it exists
         const evalBtn = document.getElementById('courseEvalBtn');
-        if (evalBtn) evalBtn.style.display = '20px';
+        if (evalBtn) evalBtn.style.display = 'inline-block'; // Corrected: Assuming '20px' meant to show
       } else {
         // ...existing code for other lessons...
         belowBackToOutlineBtn.style.display = 'inline-block';
         const evalBtn = document.getElementById('courseEvalBtn');
-        if (evalBtn) evalBtn.style.display = '20px';
+        if (evalBtn) evalBtn.style.display = 'inline-block'; // Corrected: Assuming '20px' meant to show
       }
     }
     // QUIZ VIEW
@@ -259,58 +256,34 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       // For quiz after lesson 5 (lessons[4].quiz, so currentIndex is 4)
       else if (currentIndex === 4) { // This implies showingQuiz is true due to the outer else
-        // Quiz: After Lesson 5: ← Lesson 5, Back, Evaluation →
+        // Quiz: After Lesson 5: Displaying ← Lesson 5 and Back (to outline)
+        // "Previous" button goes to Lesson 5 content
         belowPrevBtn.style.display = 'inline-block';
         belowPrevLabel.textContent = '← ' + lessons[4].shortTitle;
         belowPrevBtn.onclick = () => showLesson(4);
-        belowPrevBtn.style.marginRight = '20px'; // Adjust this value for desired spacing
 
         belowBackToOutlineBtn.style.display = 'inline-block'; // This is the "Back" (to outline) button
         belowBackToOutlineBtn.textContent = 'Back';
-        belowBackToOutlineBtn.style.marginRight = '20px'; // Adjust this value for desired spacing
 
-        // Evaluation button
-        let evalBtn = document.getElementById('courseEvalBtn');
-        if (!evalBtn) {
-          evalBtn = document.createElement('button');
-          evalBtn.id = 'courseEvalBtn';
-          evalBtn.textContent = 'Evaluation →';
-          evalBtn.className = belowBackToOutlineBtn.className; // Copy styling
-          belowBackBtnDiv.appendChild(evalBtn);
+        // "Next" button goes to Course Evaluation (lessons[5])
+        if (lessons[currentIndex + 1] && lessons[currentIndex + 1].quiz) { // Check if lessons[5] exists and has a quiz/form
+            belowNextBtn.style.display = 'inline-block';
+            belowNextLabel.textContent = lessons[currentIndex + 1].shortTitle + ' →'; // "Course Evaluation →"
+            belowNextBtn.onclick = () => showQuiz(currentIndex + 1); // This will call showQuiz(5)
+        } else {
+            belowNextBtn.style.display = 'none';
         }
-        evalBtn.style.display = 'inline-block';
-        evalBtn.style.marginRight = ''; // Ensure no margin for the last button in this row
-        evalBtn.onclick = () => {
-          // Show the evaluation form in the viewer
-          pdfViewer.style.display = 'block';
-          belowBackBtnDiv.style.display = 'block';
-          courseOutline.style.display = 'none';
-          pdfCanvas.style.display = 'none';
-          if (pdfControlsTop) pdfControlsTop.style.display = 'none';
-          if (pdfControlsBottom) pdfControlsBottom.style.display = 'none';
-          pdfStatusMessage.style.display = 'none';
-          formViewer.src = 'https://forms.gle/J1GYecjTdYnjpAzf9';
-          formViewer.style.display = 'block';
+      }
+      // For Course Evaluation form (lessons[5].quiz, so currentIndex is 5)
+      else if (currentIndex === 5) {
+        belowPrevBtn.style.display = 'inline-block';
+        belowPrevLabel.textContent = '← ' + lessons[4].quiz.title; // "Quiz: After Lesson 5"
+        belowPrevBtn.onclick = () => showQuiz(4); // Show the quiz for Lesson 5
 
-          // When evaluation form is shown, only "Back" (to outline) button is active in this bar
-          belowPrevBtn.style.display = 'none';
-          belowNextBtn.style.display = 'none';
-          belowBackToOutlineBtn.style.display = 'inline-block';
-          // Reset margins when only "Back" is shown after clicking "Evaluation ->"
-          belowPrevBtn.style.marginRight = '';
-          belowBackToOutlineBtn.style.marginRight = '';
-          if(evalBtn) evalBtn.style.display = 'none'; // Hide the "Evaluation ->" button itself
+        belowBackToOutlineBtn.style.display = 'inline-block';
+        belowBackToOutlineBtn.textContent = 'Back';
 
-          // Reset container styling from flex to block (as it now likely has only one button)
-          belowBackBtnDiv.style.display = 'block';
-          belowBackBtnDiv.style.justifyContent = ''; // Reset
-          belowBackBtnDiv.style.alignItems = '';   // Reset
-        };
-
-        // Apply flex properties for the three buttons to be in a row and spaced
-        // belowBackBtnDiv.style.display = 'flex'; // Already handled by the logic at the function start
-        belowBackBtnDiv.style.justifyContent = 'center'; // Center the group of buttons
-        belowBackBtnDiv.style.alignItems = 'center'; // Vertically align items in the center
+        belowNextBtn.style.display = 'none'; // No "Next" after the final evaluation
       }
     }
   }
@@ -432,6 +405,11 @@ document.addEventListener('DOMContentLoaded', () => {
       pdfStatusMessage.style.display = 'none';
       formViewer.src = 'https://forms.gle/J1GYecjTdYnjpAzf9'; // Your evaluation form link
       formViewer.style.display = 'block';
+
+      // Set state and update bottom navigation for consistency
+      currentIndex = 5; // Assuming "Course Evaluation" is at index 5 in the lessons array
+      showingQuiz = true; // Treat form display like a quiz display for nav purposes
+      updateBelowNavButtons();
     });
   }
 });
