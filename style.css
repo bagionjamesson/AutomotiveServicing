@@ -740,14 +740,14 @@ canvas#pdf-canvas {
 .intro-section h1 {
   color: #2c3e50; /* A slightly more modern, darker blue-grey */
   margin-bottom: 25px; /* Adjusted margin */
-  font-size: 2.7em;   /* Slightly larger font size */
+  font-size: 2.5em;   /* Adjusted font size */
   font-weight: 700;   /* Ensure strong heading weight */
   line-height: 1.2;
 }
 
 .intro-section h2 {
   color: #334155; /* Slightly softer than h1, but still strong */
-  font-size: 1.9em;
+  font-size: 1.7em; /* Adjusted font size */
   font-weight: 600;
   margin-top: 35px; /* More space above H2 */
   margin-bottom: 20px; /* Space between H2 and the list */
@@ -757,7 +757,7 @@ canvas#pdf-canvas {
 .intro-section p {
   color: #4a5568; /* Softer, slightly desaturated grey for paragraph text */
   line-height: 1.7; /* Increased line-height for better readability */
-  font-size: 1.15em; /* Slightly larger paragraph font size */
+  font-size: 1.1em; /* Adjusted paragraph font size */
   margin-bottom: 20px; /* Consistent paragraph bottom margin */
 }
 
@@ -778,7 +778,7 @@ canvas#pdf-canvas {
 /* Styling for list items in the intro section */
 .intro-section li {
   color: #4a5568; /* Consistent with paragraph text */
-  font-size: 1.1em; /* Slightly smaller for list items or adjust as preferred */
+  font-size: 1.05em; /* Adjusted list item font size */
   line-height: 1.7;
   margin-bottom: 12px; /* Space between list items */
   padding-left: 30px;  /* Space for custom bullet */
@@ -811,16 +811,16 @@ canvas#pdf-canvas {
 }
 @media (max-width: 900px) {
   .intro-section h1 {
-    font-size: 2.2em; /* Adjust heading size for smaller screens */
+    font-size: 2.0em; /* Adjust heading size for smaller screens */
   }
   .intro-section h2 {
-    font-size: 1.6em; /* Adjust H2 size for smaller screens */
+    font-size: 1.4em; /* Adjust H2 size for smaller screens */
   }
   .intro-section p {
-    font-size: 1.05em; /* Adjust paragraph size for smaller screens */
+    font-size: 1.0em; /* Adjust paragraph size for smaller screens */
   }
   .intro-section li {
-    font-size: 1em; /* Adjust list item size for smaller screens */
+    font-size: 0.95em; /* Adjust list item size for smaller screens */
   }
 }
 
