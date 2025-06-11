@@ -27,6 +27,30 @@
   </nav>
 
   <section class="main-section">
+     <!-- Introduction Section -->
+    <section class="intro-section">
+      <div class="intro-content">
+        <h1>Automotive Servicing</h1>
+        <p>
+          This Automotive Servicing course is designed to provide you with the essential knowledge and skills 
+          required for effective automotive repairs and maintenance. Learn everything from the proper use 
+          of automotive tools to interpreting technical plans and performing precise measurements.
+        </p>
+
+        <h2>What You Will Gain:</h2>
+        <ul>
+          <li><strong>Comprehensive Knowledge:</strong> Master automotive tools, measurements, diagnostics, and servicing procedures.</li>
+          <li><strong>Interactive Quizzes:</strong> Reinforce your learning and ensure understanding of critical concepts.</li>
+          <li><strong>Industry-Recognized Certification:</strong> Validate your skills in automotive servicing upon completion.</li>
+          <li><strong>Real-World Applications:</strong> Connect theory to practical skills, ensuring you're ready for real automotive tasks.</li>
+        </ul>
+
+        <p>
+          Start the Automotive Servicing module today and build the expertise needed to succeed in the fast-paced automotive industry!
+        </p>
+        <button id="showOutlineBtn" class="yellow-btn" text-alignemnt="center">Start</button>
+      </div>
+    </section>
     <!-- PDF Viewer -->
     <div class="pdf-viewer" id="pdfViewer" style="display:none;">
       <div id="pdf-controls-top">
@@ -162,6 +186,25 @@
   </footer>
 
   <script src="main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const introSection = document.querySelector('.intro-section');
+      const showOutlineButton = document.getElementById('showOutlineBtn');
+      const courseOutlineElement = document.getElementById('courseOutline');
+
+      if (introSection && showOutlineButton && courseOutlineElement) {
+        // introSection is visible by default
+        // courseOutlineElement is hidden by main.js initially
+
+        showOutlineButton.addEventListener('click', () => {
+          introSection.style.display = 'none';    // Hide the introduction section
+          courseOutlineElement.style.display = 'block'; // Show the course outline
+        });
+      } else {
+        console.error('Required elements for intro/outline toggle not found. Check IDs: showOutlineBtn, courseOutline, and class: intro-section.');
+      }
+    });
+  </script>
 
 </body>
 </html>

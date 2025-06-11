@@ -188,6 +188,7 @@ body {
   flex-wrap: wrap;
   padding: 40px 20px;
   gap: 40px;
+  justify-content: center; /* This will center the flex items (content blocks) */
   background-color: #ffffff;
 }
 
@@ -387,7 +388,7 @@ canvas#pdf-canvas {
   transition: background 0.2s;
   box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
-.take-test-btn:hover {
+  .take-test-btn:hover {
   background-color: #ffe066;
 }
 
@@ -719,8 +720,110 @@ canvas#pdf-canvas {
   margin-top: 4px;
   margin-bottom: 16px;
 }
+/* Introduction Section Styles */
+
+.intro-section {
+  background-color: #f0f4f8; /* Light background for the intro */
+  padding: 50px 30px; /* Increased padding for more breathing room */
+  text-align: left;
+  border-radius: 12px; /* Slightly larger border radius */
+  margin-bottom: 30px; /* Increased bottom margin */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06); /* Softer, slightly more pronounced shadow */
+}
+
+.intro-content {
+  max-width: 800px;
+  margin: 0 auto;
+  /* text-align: center; */ /* This is inherited from .intro-section, so direct children will be centered */
+}
+
+.intro-section h1 {
+  color: #2c3e50; /* A slightly more modern, darker blue-grey */
+  margin-bottom: 25px; /* Adjusted margin */
+  font-size: 2.7em;   /* Slightly larger font size */
+  font-weight: 700;   /* Ensure strong heading weight */
+  line-height: 1.2;
+}
+
+.intro-section h2 {
+  color: #334155; /* Slightly softer than h1, but still strong */
+  font-size: 1.9em;
+  font-weight: 600;
+  margin-top: 35px; /* More space above H2 */
+  margin-bottom: 20px; /* Space between H2 and the list */
+  line-height: 1.3;
+}
+
+.intro-section p {
+  color: #4a5568; /* Softer, slightly desaturated grey for paragraph text */
+  line-height: 1.7; /* Increased line-height for better readability */
+  font-size: 1.15em; /* Slightly larger paragraph font size */
+  margin-bottom: 20px; /* Consistent paragraph bottom margin */
+}
+
+.intro-section ul {
+  list-style: none; /* Remove default bullets */
+  padding-left: 0;  /* Remove default padding */
+  margin-top: 0;
+  margin-bottom: 25px; /* Space after the list */
+  text-align: left;    /* Align list items to the left */
+  display: inline-block; /* Allows the left-aligned list to be centered by parent's text-align: center */
+}
+
+/* Add more space below the last paragraph before the button */
+.intro-section .intro-content > p:last-of-type {
+  margin-bottom: 30px;
+}
+
+/* Styling for list items in the intro section */
+.intro-section li {
+  color: #4a5568; /* Consistent with paragraph text */
+  font-size: 1.1em; /* Slightly smaller for list items or adjust as preferred */
+  line-height: 1.7;
+  margin-bottom: 12px; /* Space between list items */
+  padding-left: 30px;  /* Space for custom bullet */
+  position: relative;  /* For custom bullet positioning */
+}
+
+.intro-section li::before {
+  content: '✔'; /* Heavy check mark character */
+  color: #22c55e; /* A vibrant green for the checkmark */
+  position: absolute;
+  left: 0;
+  top: 2px; /* Adjust for vertical alignment with text */
+  font-size: 1.2em; /* Make checkmark slightly larger */
+  font-weight: bold;
+}
 
 /* ====== RESPONSIVE ====== */
+
+/* Specific styling for the intro button, enhancing .yellow-btn */
+#showOutlineBtn.yellow-btn {
+  display: block; /* Allow margin auto to work for centering */
+  width: fit-content; /* Make button only as wide as its content */
+  padding: 12px 25px; /* Adjusted padding for a slightly larger button */
+  font-size: 1.05em;  /* Slightly larger font for the button text */
+  border-radius: 6px; /* Consistent with other button styles or slightly more rounded */
+  font-weight: 600;
+  margin-top: 10px; /* Space above button */
+  margin-left: auto; /* Center the button */
+  margin-right: auto; /* Center the button */
+}
+@media (max-width: 900px) {
+  .intro-section h1 {
+    font-size: 2.2em; /* Adjust heading size for smaller screens */
+  }
+  .intro-section h2 {
+    font-size: 1.6em; /* Adjust H2 size for smaller screens */
+  }
+  .intro-section p {
+    font-size: 1.05em; /* Adjust paragraph size for smaller screens */
+  }
+  .intro-section li {
+    font-size: 1em; /* Adjust list item size for smaller screens */
+  }
+}
+
 @media (max-width: 900px) {
   .footer-grid { /* Was .footer-columns */
     flex-direction: column;

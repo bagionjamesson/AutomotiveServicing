@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
       shortTitle: "Lesson 5",
       pdf: "lesson5.pdf", 
       quiz: { 
-        title: "Quiz: After Lesson 5", 
+        title: "Quiz 2", 
         form: "https://forms.gle/VuxRyQ94GyabbTCa6" // Quiz for 3, 4 & 5
         
       } 
@@ -389,6 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initial setup: you may want to hide the PDF viewer on load
   pdfViewer.style.display = 'none';
+  courseOutline.style.display = 'none'; // Hide course outline initially
   formViewer.style.display = 'none';
 
   // Place this inside your DOMContentLoaded event
