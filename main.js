@@ -10,6 +10,43 @@
 // Or if you have it locally:
 // pdfjsLib.GlobalWorkerOptions.workerSrc = 'pdf.worker.js';
 
+// Add this to the end of your main.js file
+
+document.addEventListener('DOMContentLoaded', () => {
+  const hamburgerMenu = document.querySelector('.hamburger-menu');
+  const navLinksList = document.getElementById('nav-links-list'); // Using the ID we added
+
+  if (hamburgerMenu && navLinksList) {
+    hamburgerMenu.addEventListener('click', () => {
+      // Toggle .active class on nav-links to show/hide menu
+      navLinksList.classList.toggle('active');
+      
+      // Toggle .active class on hamburger for X animation
+      hamburgerMenu.classList.toggle('active');
+
+      // Update ARIA attribute for accessibility
+      const isExpanded = navLinksList.classList.contains('active');
+      hamburgerMenu.setAttribute('aria-expanded', isExpanded.toString());
+    });
+
+    // Optional: Close mobile menu when a link is clicked
+    // This is useful if your links navigate away or for single-page app-like behavior
+    navLinksList.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        // Only close if the menu is active and it's a mobile view (hamburger is visible)
+        if (navLinksList.classList.contains('active') && getComputedStyle(hamburgerMenu).display !== 'none') {
+          navLinksList.classList.remove('active');
+          hamburgerMenu.classList.remove('active');
+          hamburgerMenu.setAttribute('aria-expanded', 'false');
+        }
+      });
+    });
+  } else {
+    console.warn('Hamburger menu or navigation links list not found. Check HTML class/ID names.');
+  }
+});
+
+
 
 document.addEventListener('DOMContentLoaded', () => {
   // List of lessons and quizzes in order

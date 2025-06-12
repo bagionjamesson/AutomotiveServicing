@@ -28,6 +28,7 @@ body {
   gap: 12px;
   padding: 8px 0 8px 4px;
   user-select: none;
+  /* position: relative; /* Not needed here, parent .navbar is positioning context */
 }
 
 .navbar .logo img {
@@ -116,6 +117,147 @@ body {
   color: #4666a3; /* Gray triangle */
   margin-left: 4px;
 }
+/* ==========================================================================
+   Mobile Navigation (Hamburger Menu)
+   ========================================================================== */
+
+/* Hamburger Menu Button */
+.hamburger-menu {
+  display: none; /* Hidden by default on larger screens */
+  flex-direction: column;
+  justify-content: space-around;
+  width: 30px;
+  height: 25px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1001; /* Ensure it's above other navbar items if overlapping */
+  /* margin-left: 15px; /* Original: Give some space from the logo or other elements */
+  /* This will be controlled by margin-left: auto in the media query */
+}
+
+.hamburger-menu .hamburger-bar {
+  display: block;
+  width: 100%;
+  height: 3px;
+  background-color: #fff; /* White bars for visibility on dark navbar */
+  border-radius: 3px;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Styles for .nav-links (the <ul>) for desktop are mostly covered by existing .navbar ul */
+/* Ensure .nav-links is used if you want to specifically target it */
+.navbar .nav-links {
+  list-style: none;
+  display: flex; /* This is for desktop view */
+  gap: 2px; /* From your existing .navbar ul */
+  padding: 0;
+  margin: 0;
+}
+
+
+/* Media Query for smaller screens (e.g., tablets and mobile) */
+/* You can adjust 768px to 700px if you want to use your existing breakpoint */
+@media (max-width: 768px) {
+  .navbar {
+    /* Ensure navbar stays as a row if you want logo and hamburger side-by-side */
+    /* If your 700px media query makes .navbar flex-direction: column, you might need to override it here
+       or adjust that rule. For logo and hamburger on one line: */
+    flex-direction: row;
+    align-items: center;
+    /* padding: 0 16px; /* Example padding for mobile */
+  }
+
+  /* Center the logo on mobile */
+  .navbar .logo {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1; /* Below hamburger (1001) and expanded menu (1000) */
+    padding: 0; /* Reset padding if transform handles all positioning */
+    margin-bottom: 0; /* Override any margin from other rules like the 700px one */
+  }
+
+  .navbar .nav-links {
+    display: none; /* Hide the links by default on small screens */
+    flex-direction: column;
+    width: 100%;
+    position: absolute;
+    top: 100%; /* Position below the navbar (assumes navbar height is its content height) */
+    /* If your navbar has a fixed height, e.g., 56px, you can use top: 56px; */
+    left: 0;
+    background-color: #fff; /* White background for the mobile menu dropdown */
+    padding: 10px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Ensure menu is above centered logo (z-index:1) but below hamburger's X (z-index:1001) if active */
+  }
+
+  .navbar .nav-links.active {
+    display: flex; /* Show the menu when active */
+  }
+
+  .navbar .nav-links li {
+    margin: 0;
+    width: 100%;
+    text-align: left; /* Or 'center' if you prefer */
+  }
+
+  .navbar .nav-links li a {
+    display: block;
+    padding: 12px 20px; /* Suitable padding for touch targets */
+    width: 100%;
+    color: #285197; /* Navbar blue for links on white background */
+    font-weight: 500; /* Consistent with desktop */
+    border-bottom: 1px solid #eee; /* Light separator for links */
+  }
+
+  .navbar .nav-links li:last-child a {
+    border-bottom: none;
+  }
+
+  .navbar .nav-links li a:hover,
+  .navbar .nav-links li a.active {
+    background-color: #f0f0f0; /* Light grey hover for white menu */
+    color: #285197; /* Keep link color on hover */
+  }
+
+  /* Dropdown menu adjustments for mobile, if you have dropdowns */
+  .navbar .nav-links li.dropdown .dropdown-menu {
+    position: static; /* Make dropdowns flow in the mobile menu */
+    box-shadow: none;
+    min-width: 100%;
+    background-color: #f8f8f8; /* Slightly different background for sub-menu */
+    border-top: 1px solid #eee;
+  }
+
+  .navbar .nav-links li.dropdown .dropdown-menu li a {
+    color: #285197; /* Consistent link color */
+    padding-left: 30px; /* Indent sub-menu items */
+  }
+  .navbar ul li.dropdown > a::after { /* Adjust dropdown arrow color for mobile if needed */
+    color: #285197; /* Match link color */
+  }
+
+
+  .hamburger-menu {
+    display: flex; /* Show the hamburger icon on small screens */
+    margin-left: auto; /* Push hamburger to the right, as logo is out of flow */
+  }
+
+  /* Animation for hamburger to "X" when active */
+  .hamburger-menu.active .hamburger-bar:nth-child(1) {
+    transform: translateY(8px) rotate(45deg); /* Adjust translate based on bar height/spacing */
+  }
+  .hamburger-menu.active .hamburger-bar:nth-child(2) {
+    opacity: 0;
+  }
+  .hamburger-menu.active .hamburger-bar:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg); /* Adjust translate */
+  }
+}
+
 
 .navbar ul li .dropdown-menu {
   display: none;
@@ -152,13 +294,13 @@ body {
 
 /* Responsive: stack menu on small screens */
 @media (max-width: 700px) {
-  .navbar {
-    flex-direction: column;
-    align-items: flex-start;
+  .navbar { /* Keep navbar as a row, logo will be centered, hamburger on right */
+    /* flex-direction: column; */ /* REMOVED: This would stack logo and hamburger */
+    /* align-items: flex-start; */ /* REMOVED */
     padding: 0 8px;
   }
   .navbar .logo {
-    margin-bottom: 8px;
+    /* margin-bottom: 8px; */ /* REMOVED: Logo is absolutely centered, no bottom margin needed here */
   }
   .navbar ul {
     flex-direction: column;
