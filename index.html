@@ -30,7 +30,7 @@
      <!-- Introduction Section -->
     <section class="intro-section">
       <div class="intro-content">
-        <h1>Automotive Servicing</h1>
+        <h1 id="introTitle">Automotive Servicing</h1>
         <p>
           This Automotive Servicing course is designed to provide you with the essential knowledge and skills 
           required for effective automotive repairs and maintenance. Learn everything from the proper use 
@@ -148,8 +148,7 @@
       <div>
         <h3>AutoLearn PH</h3>
         <span class="footer-underline"></span>
-        <p>Your complete automotive learning companion designed for Filipino learners.</p>
-        <p>Aligned with TESDA standards and industry best practices.</p>
+        <p>Your complete automotive learning companion designed for Filipino learners.Aligned with TESDA standards and industry best practices.</p>
       </div>
       <div>
         <h3>Quick Links</h3>
@@ -163,8 +162,7 @@
       </div>
       <!-- Column 3: Learning Resources -->
       <div>
-        <h3>Resources</h3>
-        <span class="footer-underline"></span>
+        <h3>Resources <span class="footer-underline"></span></h3>
         <ul>
           <li><a href="https://bagionjamesson.github.io/Resources/#DownloadModule" target="_blank">Downloadable Modules</a></li>
           <li><a href="https://bagionjamesson.github.io/Resources/#LegitimateExternalResources" target="_blank"> Legitimate External Resources</a></li>
@@ -184,27 +182,6 @@
       © 2025 AutoLearn PH / Bagion James Son. All rights reserved.
     </div>
   </footer>
-
   <script src="main.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const introSection = document.querySelector('.intro-section');
-      const showOutlineButton = document.getElementById('showOutlineBtn');
-      const courseOutlineElement = document.getElementById('courseOutline');
-
-      if (introSection && showOutlineButton && courseOutlineElement) {
-        // introSection is visible by default
-        // courseOutlineElement is hidden by main.js initially
-
-        showOutlineButton.addEventListener('click', () => {
-          introSection.style.display = 'none';    // Hide the introduction section
-          courseOutlineElement.style.display = 'block'; // Show the course outline
-        });
-      } else {
-        console.error('Required elements for intro/outline toggle not found. Check IDs: showOutlineBtn, courseOutline, and class: intro-section.');
-      }
-    });
-  </script>
-
 </body>
 </html>

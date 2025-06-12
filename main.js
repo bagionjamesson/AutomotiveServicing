@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
         belowPrevBtn.onclick = () => showLesson(3);
 
         belowNextBtn.style.display = 'inline-block';
-        belowNextLabel.textContent = 'Quiz 2 →';
+        belowNextLabel.textContent = 'Take the Quiz 2 →';
         belowNextBtn.onclick = () => showQuiz(4);
 
         belowBackToOutlineBtn.style.display = 'inline-block';
@@ -414,3 +414,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+  document.addEventListener('DOMContentLoaded', () => {
+      const introSection = document.querySelector('.intro-section');
+      const showOutlineButton = document.getElementById('showOutlineBtn');
+      const courseOutlineElement = document.getElementById('courseOutline');
+
+      if (introSection && showOutlineButton && courseOutlineElement) {
+        // introSection is visible by default
+        // courseOutlineElement is hidden by main.js initially
+
+        showOutlineButton.addEventListener('click', () => {
+          introSection.style.display = 'none';    // Hide the introduction section
+          courseOutlineElement.style.display = 'block'; // Show the course outline
+        });
+      } else {
+        console.error('Required elements for intro/outline toggle not found. Check IDs: showOutlineBtn, courseOutline, and class: intro-section.');
+      }
+    });

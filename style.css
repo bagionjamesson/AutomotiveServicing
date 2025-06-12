@@ -189,7 +189,7 @@ body {
   padding: 40px 20px;
   gap: 40px;
   justify-content: center; /* This will center the flex items (content blocks) */
-  background-color: #ffffff;
+  background-color: #b3c6e0;
 }
 
 /* ==========================================================================
@@ -743,6 +743,7 @@ canvas#pdf-canvas {
   font-size: 2.5em;   /* Adjusted font size */
   font-weight: 700;   /* Ensure strong heading weight */
   line-height: 1.2;
+  text-align: center; /* Center the main heading */
 }
 
 .intro-section h2 {
