@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>AUTOMOTIVE SERVICING</title>
+  <title>Auto Electrical System</title>
   <link rel="icon" type="image/png" href="logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
@@ -36,7 +36,8 @@
      <!-- Introduction Section -->
     <section class="intro-section">
       <div class="intro-content">
-        <h1 id="introTitle">Automotive Servicing</h1>
+        <h1 id="introTitle"></h1>
+         <h1 id="introTitle">Automotive Servicing</h1>
         <p>
           This Automotive Servicing course is designed to provide you with the essential knowledge and skills 
           required for effective automotive repairs and maintenance. Learn everything from the proper use 
@@ -56,7 +57,16 @@
         </p>
         <button id="showOutlineBtn" class="yellow-btn">Start</button>
       </div>
+      <!-- The h1 with id="introTitle" was removed as the new h1 below serves as the main title -->
     </section>
+
+    <!-- Unit Introductions Container (Initially Hidden) -->
+    
+      <!-- Add more unit introductions here if needed -->
+    </section>
+
+
+
     <!-- PDF Viewer -->
     <div class="pdf-viewer" id="pdfViewer" style="display:none;">
       <div id="pdf-controls-top">
@@ -83,42 +93,60 @@
         </button>
       </div>
     </div>
-
     <!-- Course Outline -->
     <div class="course-outline" id="courseOutline">
       <h1>Course Outline</h1>
       <div class="course-sidebar">
         <h3 class="unit-title"> AUTOMOTIVE SERVICING</h3>
+        <div class="test-item test-highlight" data-gform-src="https://forms.gle/JAFZJ3AMEmJCzuTq7">
+          <span class="test-title">Pre-Test</span>
+          <button class="take-test-btn">Take</button>
+        </div>
+        
         <div class="lesson-item" data-pdf-src="lesson1.pdf">
-          <span class="lesson-title">Lesson 1: Use Hand Tools</span>
+          <span class="lesson-title">Lesson 1: Understand the importance of proper safety procedures when working with electrical system.</span>
           <span class="lesson-status"></span>
         </div>
         <div class="lesson-item" data-pdf-src="lesson2.pdf">
-          <span class="lesson-title">Lesson 2: Perform Mensuration and Calculations</span>
+          <span class="lesson-title">Lesson 2: Explain Basic Theories of Electricity.</span>
           <span class="lesson-status"></span>
         </div>
-        <div class="test-item test-highlight" data-pdf-src="quiz_after_lesson2.pdf">
+         <div class="test-item test-highlight" data-gform-src="https://forms.gle/g5HQEBZzW2ZD2RhC6">
           <span class="test-title">Quiz 1</span>
-          <button class="take-test-btn">Take the Quiz</button>
+          <button class="take-test-btn">Take</button>
         </div>
-        <div class="lesson-item" data-pdf-src="lesson3.pdf">
-          <span class="lesson-title">Lesson 3: Interpret Plans and Drawings</span>
+       <div class="lesson-item" data-pdf-src="lesson3.pdf">
+          <span class="lesson-title">Lesson 3: Calculate Voltage, Current and Resistance using Ohm’s Law.</span>
           <span class="lesson-status"></span>
         </div>
         <div class="lesson-item" data-pdf-src="lesson4.pdf">
-          <span class="lesson-title">Lesson 4: Perform Shop Maintenance</span>
+          <span class="lesson-title">Lesson 4: List the types of circuits.</span>
           <span class="lesson-status"></span>
         </div>
         <div class="lesson-item" data-pdf-src="lesson5.pdf">
-          <span class="lesson-title">Lesson 5: Practice Occupational Health and Safety Procedures</span>
+          <span class="lesson-title">Lesson 5: LIst of the</span>
           <span class="lesson-status"></span>
         </div>
-        <div class="test-item test-highlight" data-pdf-src="quiz_after_lesson5.pdf">
+        <div class="test-item test-highlight" data-gform-src="https://forms.gle/8bkFukSJAuhF5dKs7">
           <span class="test-title">Quiz 2</span>
-          <button class="take-test-btn">Take the Quiz</button>
+          <button class="take-test-btn">Take</button>
         </div>
-         <div class="evaluation-slot" id="course-eval-item" data-pdf-src="course_after_quiz">
-          <span class="test-title">Go to Course Evaluation and Get Certificate</span>
+        <div class="test-item test-highlight" data-gform-src="https://forms.gle/qxPfV6hxFi7eVuRp9">
+          <span class="test-title">Post-Test</span>
+          <button class="take-test-btn">Take</button>
+        </div>
+        <div class="test-item test-highlight" data-gform-src="https://forms.gle/fGSwZ8QZysQTU4ER9">
+          <span class="test-title">Summative Exam</span>
+          <button class="take-test-btn">Take </button>  
+        </div>
+  
+        <div class="test-item test-highlight" data-gform-src="https://forms.gle/4gPgjnWEaP7AVyoY8">
+          <span class="test-title">Final Exam</span>
+          <button class="take-test-btn">Take</button>
+        </div>
+
+         <div class="evaluation-slot" id="course-eval-item" data-gform-src="https://forms.gle/rEmfBDVUC7wMe4xS9">
+          <span class="test-title">Course Evaluation</span>
           <button class="go-btn" id="goToCourseEvalBtn">Go</button>
           
         </div>
@@ -178,7 +206,7 @@
       <div class="footer-col">
         <h3>Contact<span class="footer-underline"></span></h3>
         <div class="footer-contact">
-          <a href="mailto:contact@autolearn.ph" class="footer-social-link mail" aria-label="Email">
+          <a href="mail:bagionjamesson23@gmail.com" class="footer-social-link mail" aria-label="Email">
             <svg class="footer-icon" width="20" height="20" fill="#FFD600" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 2v.01L12 13 4 6.01V6h16zM4 20v-9.99l7.99 7.99c.39.39 1.02.39 1.41 0L20 10.01V20H4z"/></svg>
           </a>
           bagionjamesson23@gmail.com
@@ -190,7 +218,7 @@
           +63 912 345 6789
         </div>
         <div class="footer-contact">
-          <a href="https://goo.gl/maps/xyz" target="_blank" class="footer-social-link location" aria-label="Location">
+          <a href="https://maps.app.goo.gl/fBzZYt9EEEPbk71M6" target="_blank" class="footer-social-link location" aria-label="Location">
             <svg class="footer-icon" width="20" height="20" fill="#FFD600" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
           </a>
           Valenzuela City, Philippines

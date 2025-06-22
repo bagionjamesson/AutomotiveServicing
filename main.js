@@ -1,18 +1,8 @@
 // Ensure PDF.js worker is configured.
-// IMPORTANT: You need to have the pdf.worker.js file (or a similar build)
-// available at this path relative to your HTML file or an absolute path.
-// If you downloaded PDF.js, it's usually in the `build` or `web` directory.
-// For this example, we'll assume `pdf.worker.js` is in the same directory as `main.js`.
-// If your `main.js` (the one from `pdfjsLib.GlobalWorkerOptions.workerSrc = 'main.js';`)
-// was intended to be the worker itself, you might need to adjust this path
-// or ensure the worker file is correctly named and placed.
-// A common practice is to point to the worker file directly:
-// Or if you have it locally:
-// pdfjsLib.GlobalWorkerOptions.workerSrc = 'pdf.worker.js';
+// Using CDN worker for simplicity, ensure this path is correct or use a local copy.
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js';
 
-// Add this to the end of your main.js file
-
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => { // Consolidated DOMContentLoaded
   const hamburgerMenu = document.querySelector('.hamburger-menu');
   const navLinksList = document.getElementById('nav-links-list'); // Using the ID we added
 
@@ -44,55 +34,11 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     console.warn('Hamburger menu or navigation links list not found. Check HTML class/ID names.');
   }
-});
-
-
-
-document.addEventListener('DOMContentLoaded', () => {
-  // List of lessons and quizzes in order
-  const lessons = [
-    { title: "Lesson 1: Use Hand Tools", shortTitle: "Lesson 1", pdf: "lesson1.pdf" },
-    { 
-      title: "Lesson 2: Perform Mensuration and Calculations", 
-      shortTitle: "Lesson 2",
-      pdf: "lesson2.pdf", 
-      quiz: { 
-        title: "Quiz: After Lesson 2", 
-        form: "https://forms.gle/dfDqbScq2oprYDaZ9" // Quiz for 1 & 2
-      } 
-    },
-    { title: "Lesson 3: Interpret Plans and Drawings", shortTitle: "Lesson 3", pdf: "lesson3.pdf" },
-    { title: "Lesson 4: Perform Shop Maintenance", shortTitle: "Lesson 4", pdf: "lesson4.pdf" },
-    { 
-      title: "Lesson 5: Practice Occupational Health and Safety Procedures", 
-      shortTitle: "Lesson 5",
-      pdf: "lesson5.pdf", 
-      quiz: { 
-        title: "Quiz 2", 
-        form: "https://forms.gle/VuxRyQ94GyabbTCa6" // Quiz for 3, 4 & 5
-        
-      } 
-    },
-    { 
-      title: "Course Evaluation", 
-      shortTitle: "Course Evaluation", 
-      quiz: { 
-        title: "Course Evaluation", 
-        form: "https://forms.gle/J1GYecjTdYnjpAzf9" // Course evaluation form
-      } 
-    }
-    
-
-  ];
 
   const pdfViewer = document.getElementById('pdfViewer');
   const courseOutline = document.getElementById('courseOutline');
-  const backToOutlineBtn = document.getElementById('backToOutlineBtn');
-  const prevBtn = document.querySelector('.prev-btn');
-  const nextBtn = document.querySelector('.next-btn');
-  const prevLabel = prevBtn.querySelector('.nav-label');
-  const nextLabel = nextBtn.querySelector('.nav-label');
-  const takeQuizBtn = document.querySelector('.take-quiz-btn');
+  // const backToOutlineBtn = document.getElementById('backToOutlineBtn'); // This ID is not in HTML, belowBackToOutlineBtn is used.
+  // const prevBtn = document.querySelector('.prev-btn'); // Top nav buttons are hidden and logic removed
   const formViewer = document.getElementById('form-viewer');
   const pdfCanvas = document.getElementById('pdf-canvas');
   const pdfControlsTop = document.getElementById('pdf-controls-top');
@@ -104,265 +50,175 @@ document.addEventListener('DOMContentLoaded', () => {
   const belowNextBtn = document.getElementById('belowNextBtn');
   const belowPrevLabel = document.getElementById('belowPrevLabel');
   const belowNextLabel = document.getElementById('belowNextLabel');
+  const introSection = document.querySelector('.intro-section'); // Main course intro
+  const showOutlineButton = document.getElementById('showOutlineBtn'); // Button in main intro
+  const introTitleElement = document.getElementById('introTitle'); // The H1 in the main intro
+
+  // Unit Introduction specific elements
+  const unitIntroductionsContainer = document.getElementById('unit-introductions-container');
+  let unitSubtitles = [];
+  let startUnitBtns = [];
+  let unitIntroBackBtns = [];
+
+  // Collect all navigable items from the DOM in order
+  const courseSidebar = document.querySelector('.course-sidebar');
+  let allNavigableItems = [];
+  if (courseSidebar) {
+      // Select all items that can be navigated to
+      allNavigableItems = Array.from(courseSidebar.querySelectorAll('.lesson-item, .test-item.test-highlight, .evaluation-slot'));
+      
+      // Select elements related to unit introductions
+      unitSubtitles = Array.from(courseSidebar.querySelectorAll('.unit-subtitle[data-unit-intro-id]'));
+      if (unitIntroductionsContainer) { // Ensure container exists before querying within it
+        startUnitBtns = Array.from(unitIntroductionsContainer.querySelectorAll('.start-unit-btn[data-target-item-id]'));
+        unitIntroBackBtns = Array.from(unitIntroductionsContainer.querySelectorAll('.unit-intro-back-btn'));
+      }
+  } else {
+      console.error("'.course-sidebar' not found. Navigation items cannot be initialized.");
+  }
 
   let currentIndex = null;
-  let showingQuiz = false;
   let pdfDoc = null;
   let pageNum = 1;
   let totalPages = 1;
+  // Helper to get the title from an item element
+  const getItemTitle = (itemElement) => 
+      itemElement ? (itemElement.querySelector('.lesson-title, .test-title')?.textContent.trim() || 'Item') : 'Item';
 
-  // Helper to load a lesson by index
-  function showLesson(index) {
+  // Generic function to display content based on item index
+  function displayItemContent(index) {
+    if (index < 0 || index >= allNavigableItems.length) return;
     currentIndex = index;
-    showingQuiz = false;
     pdfViewer.style.display = 'block';
     belowBackBtnDiv.style.display = 'block';
+    if (unitIntroductionsContainer) unitIntroductionsContainer.style.display = 'none'; // Hide unit intros
     courseOutline.style.display = 'none';
-    formViewer.style.display = 'none';
-    pdfCanvas.style.display = 'block';
-    if (pdfControlsTop) pdfControlsTop.style.display = 'flex';
-    if (pdfControlsBottom) pdfControlsBottom.style.display = 'flex';
-    pdfStatusMessage.style.display = 'block';
 
-    // Hide the evaluation button when switching lessons
-    const evalBtn = document.getElementById('courseEvalBtn');
-    if (evalBtn) evalBtn.style.display = 'none' ; // Corrected: 'none' to hide, based on comment
+    // Initially hide all specific content views and PDF controls
+    pdfCanvas.style.display = 'none'; // Hide PDF canvas
+    formViewer.style.display = 'none'; // Hide Google Form iframe
+    if (pdfControlsTop) pdfControlsTop.style.display = 'none'; // Hide top PDF controls
+    if (pdfControlsBottom) pdfControlsBottom.style.display = 'none'; // Hide bottom PDF controls
+    if (pdfStatusMessage) pdfStatusMessage.style.display = 'none'; // Hide PDF status message
 
-    // Load the PDF
-    loadPdf(lessons[index].pdf);
-    updateNavButtons();
+    const currentItem = allNavigableItems[currentIndex];
+    const gformSrc = currentItem.dataset.gformSrc; // Check for Google Form source
+    const pdfSrc = currentItem.dataset.pdfSrc;
+
+    if (gformSrc) {
+        // It's a Google Form (Pre-Test, Post-Test, Summative, Final Exam)
+        formViewer.src = gformSrc;
+        formViewer.style.display = 'block'; // Show the iframe
+
+        // PDF-specific elements remain hidden (as per initial hide)
+    } else if (pdfSrc) {
+        // It's a PDF (Lesson or the evaluation slot)
+        pdfCanvas.style.display = 'block';
+        if (pdfControlsTop) pdfControlsTop.style.display = 'flex';
+        if (pdfControlsBottom) pdfControlsBottom.style.display = 'flex';
+        if (pdfStatusMessage) pdfStatusMessage.style.display = 'block';
+
+        // Google Form iframe remains hidden (as per initial hide)
+        loadPdf(pdfSrc);
+    } else {
+        console.warn(`Item at index ${currentIndex} has no content source (gformSrc or pdfSrc):`, currentItem);
+        // Fallback: hide viewer, show outline
+        pdfViewer.style.display = 'none';
+        belowBackBtnDiv.style.display = 'none';
+        courseOutline.style.display = 'block';
+        // Ensure both content types and their controls are hidden
+        formViewer.style.display = 'none';
+        pdfCanvas.style.display = 'none';
+        if (pdfControlsTop) pdfControlsTop.style.display = 'none';
+        if (pdfControlsBottom) pdfControlsBottom.style.display = 'none';
+        if (pdfStatusMessage) pdfStatusMessage.style.display = 'none';
+    }
+
     updateBelowNavButtons();
   }
 
-  function showQuiz(index) {
-    currentIndex = index;
-    showingQuiz = true;
-    pdfViewer.style.display = 'block';
-    belowBackBtnDiv.style.display = 'block';
-    courseOutline.style.display = 'none';
-    pdfCanvas.style.display = 'none';
-    if (pdfControlsTop) pdfControlsTop.style.display = 'none';
-    if (pdfControlsBottom) pdfControlsBottom.style.display = 'none';
-    pdfStatusMessage.style.display = 'none';
-    formViewer.src = lessons[index].quiz.form;
-    formViewer.style.display = 'block';
-    updateNavButtons();
-    updateBelowNavButtons(); // <-- Add this
-  }
-
-  function updateNavButtons() {
-    // Hide all by default
-    prevBtn.style.display = 'none';
-    nextBtn.style.display = 'none';
-
-    // LESSON VIEW
-    if (!showingQuiz) {
-      // Previous: show quiz if previous lesson has a quiz
-      if (currentIndex > 0 && lessons[currentIndex - 1].quiz) {
-        prevBtn.style.display = 'flex';
-        prevLabel.textContent = '← Quiz';
-        prevBtn.onclick = () => showQuiz(currentIndex - 1);
-      }
-      // Previous: show lesson if previous is a lesson
-      else if (currentIndex > 0) {
-        prevBtn.style.display = 'flex';
-        prevLabel.textContent = '← ' + lessons[currentIndex - 1].shortTitle;
-        prevBtn.onclick = () => showLesson(currentIndex - 1);
-      }
-
-      // Next: show lesson if next is a lesson
-      if (currentIndex < lessons.length - 1 && !lessons[currentIndex + 1].quiz) {
-        nextBtn.style.display = 'flex';
-        nextLabel.textContent = lessons[currentIndex + 1].shortTitle + ' →';
-        nextBtn.onclick = () => showLesson(currentIndex + 1);
-      }
-      // Next: show quiz if next is a quiz
-      else if (currentIndex < lessons.length - 1 && lessons[currentIndex + 1].quiz) {
-        nextBtn.style.display = 'flex';
-        nextLabel.textContent = 'Take the Quiz 1 →';
-        nextBtn.onclick = () => showQuiz(currentIndex);
-      }
-      //
-    }
-    // QUIZ VIEW
-    else {
-      // Previous: show lesson before this quiz
-      prevBtn.style.display = 'flex';
-      prevLabel.textContent = '← ' + lessons[currentIndex].shortTitle;
-      prevBtn.onclick = () => showLesson(currentIndex);
-
-      // Next: show next lesson if exists
-      if (currentIndex < lessons.length - 1) {
-        nextBtn.style.display = 'flex';
-        nextLabel.textContent = lessons[currentIndex + 1].shortTitle + ' →';
-        nextBtn.onclick = () => showLesson(currentIndex + 1);
-      }
-    }
-  }
-
-  // Call this whenever you show a lesson or quiz
+  // Update the navigation buttons below the PDF/Form viewer
   function updateBelowNavButtons() {
-    // Hide by default
-    // Hide all individual nav buttons by default and reset evalBtn
     belowPrevBtn.style.display = 'none';
     belowNextBtn.style.display = 'none';
-    // Reset margins that might be applied in specific cases
-    belowPrevBtn.style.marginRight = '';
-    belowBackToOutlineBtn.style.marginRight = ''; // For the middle "Back" button
 
-    const existingEvalBtn = document.getElementById('courseEvalBtn');
-    if (existingEvalBtn) {
-        existingEvalBtn.style.display = 'none'; // Hide by default, will be shown if needed
+    // Previous Button
+    if (currentIndex > 0) {
+        const prevItem = allNavigableItems[currentIndex - 1];
+        belowPrevBtn.style.display = 'inline-block';
+        belowPrevLabel.textContent = '← ' + getItemTitle(prevItem).split(':')[0].trim();
+        belowPrevBtn.onclick = () => displayItemContent(currentIndex - 1);
     }
 
-    // LESSON VIEW
-    if (!showingQuiz) {
-      if (currentIndex === 0) {
-        // Lesson 1: blank / Back / Lesson 2
-        belowPrevBtn.style.display = 'none';
-        belowNextBtn.style.display = 'inline-block';
-        belowNextLabel.textContent = lessons[1].shortTitle + ' →';
-        belowNextBtn.onclick = () => showLesson(1);
-      }
-      else if (currentIndex === 1) {
-        // Lesson 2: Lesson 1 / Back / Take the Quiz
-        belowPrevBtn.style.display = 'inline-block';
-        belowPrevLabel.textContent = '← ' + lessons[0].shortTitle;
-        belowPrevBtn.onclick = () => showLesson(0);
+    // Next Button
+    if (currentIndex < allNavigableItems.length - 1) {
+        const currentItemElement = allNavigableItems[currentIndex];
+        const nextItemElement = allNavigableItems[currentIndex + 1];
+        let nextActionIsUnitIntro = false;
+        let unitIntroIdToShow = null;
+        let unitIntroTitle = 'Next Unit Introduction';
 
-        belowNextBtn.style.display = 'inline-block';
-        belowNextLabel.textContent = 'Take the Quiz 1→';
-        belowNextBtn.onclick = () => showQuiz(1);
-      }
-      else if (currentIndex === 2) {
-        // Lesson 3: Review / Back / Lesson 4
-        belowPrevBtn.style.display = 'inline-block';
-        belowPrevLabel.textContent = '← Review';
-        belowPrevBtn.onclick = () => showQuiz(1);
+        // Check if current item is a Post-Test and next item is a Pre-Test of a new unit
+        const currentItemTitleText = getItemTitle(currentItemElement).toLowerCase();
+        const currentItemIsPostTest = currentItemTitleText.includes('post-test');
+        const nextItemIsPreTest = nextItemElement.id && nextItemElement.id.includes('-pretest-item');
 
-        belowNextBtn.style.display = 'inline-block';
-        belowNextLabel.textContent = lessons[3].shortTitle + ' →';
-        belowNextBtn.onclick = () => showLesson(3);
-      }
-      else if (currentIndex === 3) {
-        // Lesson 4: ← Lesson 3, Back to Course Outline, Lesson 5 →
-        belowPrevBtn.style.display = 'inline-block';
-        belowPrevLabel.textContent = '← ' + lessons[2].shortTitle;
-        belowPrevBtn.onclick = () => showLesson(2);
-
-        belowBackToOutlineBtn.style.display = 'inline-block';
-
-        belowNextBtn.style.display = 'inline-block';
-        belowNextLabel.textContent = lessons[4].shortTitle + ' →';
-        belowNextBtn.onclick = () => showLesson(4);
-      }
-      else if (currentIndex === 4) {
-        // Lesson 5: ← Lesson 4, Take the Quiz: After Lesson 5 →, Back
-        belowPrevBtn.style.display = 'inline-block';
-        belowPrevLabel.textContent = '← ' + lessons[3].shortTitle;
-        belowPrevBtn.onclick = () => showLesson(3);
-
-        belowNextBtn.style.display = 'inline-block';
-        belowNextLabel.textContent = 'Take the Quiz 2 →';
-        belowNextBtn.onclick = () => showQuiz(4);
-
-        belowBackToOutlineBtn.style.display = 'inline-block';
-
-        // Hide the separate evaluation button if it exists
-        const evalBtn = document.getElementById('courseEvalBtn');
-        if (evalBtn) evalBtn.style.display = 'inline-block'; // Corrected: Assuming '20px' meant to show
-      } else {
-        // ...existing code for other lessons...
-        belowBackToOutlineBtn.style.display = 'inline-block';
-        const evalBtn = document.getElementById('courseEvalBtn');
-        if (evalBtn) evalBtn.style.display = 'inline-block'; // Corrected: Assuming '20px' meant to show
-      }
-    }
-    // QUIZ VIEW
-    else {
-      // For quiz after lesson 2 (lessons[1].quiz, so currentIndex is 1)
-      if (currentIndex === 1) {
-        // Quiz after lesson 2: Lesson 2 / Back / Lesson 3
-        belowPrevBtn.style.display = 'inline-block';
-        belowPrevLabel.textContent = '← ' + lessons[1].shortTitle;
-        belowPrevBtn.onclick = () => showLesson(1);
-
-        belowNextBtn.style.display = 'inline-block';
-        belowNextLabel.textContent = lessons[2].shortTitle + ' →';
-        belowNextBtn.onclick = () => showLesson(2);
-      }
-      // For quiz after lesson 5 (lessons[4].quiz, so currentIndex is 4)
-      else if (currentIndex === 4) { // This implies showingQuiz is true due to the outer else
-        // Quiz: After Lesson 5: Displaying ← Lesson 5 and Back (to outline)
-        // "Previous" button goes to Lesson 5 content
-        belowPrevBtn.style.display = 'inline-block';
-        belowPrevLabel.textContent = '← ' + lessons[4].shortTitle;
-        belowPrevBtn.onclick = () => showLesson(4);
-
-        belowBackToOutlineBtn.style.display = 'inline-block'; // This is the "Back" (to outline) button
-        belowBackToOutlineBtn.textContent = 'Back';
-
-        // "Next" button goes to Course Evaluation (lessons[5])
-        if (lessons[currentIndex + 1] && lessons[currentIndex + 1].quiz) { // Check if lessons[5] exists and has a quiz/form
-            belowNextBtn.style.display = 'inline-block';
-            belowNextLabel.textContent = lessons[currentIndex + 1].shortTitle + ' →'; // "Course Evaluation →"
-            belowNextBtn.onclick = () => showQuiz(currentIndex + 1); // This will call showQuiz(5)
-        } else {
-            belowNextBtn.style.display = 'none';
+        if (currentItemIsPostTest && nextItemIsPreTest && unitIntroductionsContainer) {
+            // Attempt to find the corresponding unit intro for the *next* item (the Pre-Test)
+            const unitNumberMatch = nextItemElement.id.match(/^unit(\d+)-pretest-item$/);
+            if (unitNumberMatch) {
+                const unitNumber = unitNumberMatch[1];
+                const potentialIntroId = `unit${unitNumber}-intro`;
+                const introDiv = document.getElementById(potentialIntroId);
+                if (introDiv) { // Check if the intro div exists
+                    nextActionIsUnitIntro = true;
+                    unitIntroIdToShow = potentialIntroId;
+                    // Set the button text to "Unit X" based on the extracted number
+                    unitIntroTitle = `Unit: ${unitNumber}`;
+                }
+            }
         }
-      }
-      // For Course Evaluation form (lessons[5].quiz, so currentIndex is 5)
-      else if (currentIndex === 5) {
-        belowPrevBtn.style.display = 'inline-block';
-        belowPrevLabel.textContent = '← ' + lessons[4].quiz.title; // "Quiz: After Lesson 5"
-        belowPrevBtn.onclick = () => showQuiz(4); // Show the quiz for Lesson 5
 
-        belowBackToOutlineBtn.style.display = 'inline-block';
-        belowBackToOutlineBtn.textContent = 'Back';
-
-        belowNextBtn.style.display = 'none'; // No "Next" after the final evaluation
-      }
+        belowNextBtn.style.display = 'inline-block';
+        if (nextActionIsUnitIntro) {
+            belowNextLabel.textContent = unitIntroTitle + ' →';
+            belowNextBtn.onclick = () => showUnitIntroductionView(unitIntroIdToShow);
+        } else {
+            // Shorten the default next item title (e.g., "Lesson 2: Explain..." becomes "Lesson 2")
+            const shortNextItemTitle = getItemTitle(nextItemElement).split(':')[0].trim();
+            belowNextLabel.textContent = shortNextItemTitle + ' →';
+            belowNextBtn.onclick = () => displayItemContent(currentIndex + 1);
+        }
     }
   }
 
   // Click on lesson in course outline
-  document.querySelectorAll('.lesson-item').forEach((item, idx) => {
-    item.addEventListener('click', () => showLesson(idx));
-  });
+  // Click on any navigable item in course outline
+  allNavigableItems.forEach((item, idx) => {
+    // Determine the clickable element within the item
+    const clickableElement = item.querySelector('.take-test-btn, .go-btn') || item;
 
-  // Click on quiz in course outline
-  document.querySelectorAll('.test-item').forEach((item, idx) => {
-    const quizBtn = item.querySelector('.take-test-btn');
-    if (quizBtn) {
-      quizBtn.addEventListener('click', () => {
-        // For "Quiz: Lesson 1 & 2", open the quiz for Lesson 2 (index 1)
-        if (idx === 0) {
-          showQuiz(1); // Lesson 2's quiz (Quiz for 1 & 2)
+    clickableElement.addEventListener('click', (event) => {
+        // Prevent event from bubbling if a specific button was clicked
+        if (clickableElement !== item && clickableElement === event.target) {
+            event.stopPropagation();
         }
-        // For "Quiz: Lesson 3, 4 & 5", open the quiz for Lesson 5 (index 4)
-        else if (idx === 1) {
-          showQuiz(4); // Lesson 5's quiz (Quiz for 3, 4 & 5)
-        }
-      });
-    }
+        displayItemContent(idx);
+    });
   });
 
   // Back to Course Outline button
   belowBackToOutlineBtn.addEventListener('click', function() {
-    pdfViewer.style.display = 'none';
-    belowBackBtnDiv.style.display = 'none';
-    courseOutline.style.display = 'block';
-    formViewer.style.display = 'none';
+    showCourseOutlineView();
+    // `showCourseOutlineView` already handles hiding other views and resetting currentIndex.
   });
 
   // Change the label for the Back to Course Outline button to just "Back"
   belowBackToOutlineBtn.textContent = 'Back';
 
   // Update your loadPdf function:
+  // This function is called by displayItemContent when a PDF is needed
   function loadPdf(pdfUrl) {
-    const pdfjsLib = window['pdfjs-dist/build/pdf'];
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js';
-
     const canvas = document.getElementById('pdf-canvas');
     const ctx = canvas.getContext('2d');
 
@@ -424,48 +280,71 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('prev-page-bottom')?.addEventListener('click', onPrevPage);
   document.getElementById('next-page-bottom')?.addEventListener('click', onNextPage);
 
-  // Initial setup: you may want to hide the PDF viewer on load
+  // Initial setup: Hide viewer and outline, show intro
   pdfViewer.style.display = 'none';
   courseOutline.style.display = 'none'; // Hide course outline initially
-  formViewer.style.display = 'none';
+  if (formViewer) formViewer.style.display = 'none';
+  if (unitIntroductionsContainer) unitIntroductionsContainer.style.display = 'none'; // Also hide unit intros initially
+  if (introSection) introSection.style.display = 'block'; // Ensure intro is visible
 
-  // Place this inside your DOMContentLoaded event
-  const goToCourseEvalBtn = document.getElementById('goToCourseEvalBtn');
-  if (goToCourseEvalBtn) {
-    goToCourseEvalBtn.addEventListener('click', function() {
-      // Hide course outline, show PDF viewer, hide PDF canvas, show form
-      courseOutline.style.display = 'none';
-      pdfViewer.style.display = 'block';
-      belowBackBtnDiv.style.display = 'block';
-      pdfCanvas.style.display = 'none';
-      if (pdfControlsTop) pdfControlsTop.style.display = 'none';
-      if (pdfControlsBottom) pdfControlsBottom.style.display = 'none';
-      pdfStatusMessage.style.display = 'none';
-      formViewer.src = 'https://forms.gle/J1GYecjTdYnjpAzf9'; // Your evaluation form link
-      formViewer.style.display = 'block';
-
-      // Set state and update bottom navigation for consistency
-      currentIndex = 5; // Assuming "Course Evaluation" is at index 5 in the lessons array
-      showingQuiz = true; // Treat form display like a quiz display for nav purposes
-      updateBelowNavButtons();
-    });
+  // Set the main introduction title
+  if (introTitleElement) {
+    introTitleElement.textContent = ''; // You can change this text
   }
-});
 
-  document.addEventListener('DOMContentLoaded', () => {
-      const introSection = document.querySelector('.intro-section');
-      const showOutlineButton = document.getElementById('showOutlineBtn');
-      const courseOutlineElement = document.getElementById('courseOutline');
-
-      if (introSection && showOutlineButton && courseOutlineElement) {
-        // introSection is visible by default
-        // courseOutlineElement is hidden by main.js initially
-
-        showOutlineButton.addEventListener('click', () => {
-          introSection.style.display = 'none';    // Hide the introduction section
-          courseOutlineElement.style.display = 'block'; // Show the course outline
-        });
-      } else {
-        console.error('Required elements for intro/outline toggle not found. Check IDs: showOutlineBtn, courseOutline, and class: intro-section.');
-      }
+  // Logic for the "Start" button in the intro section
+  if (introSection && showOutlineButton && courseOutline) {
+    showOutlineButton.addEventListener('click', () => {
+      if (introSection) introSection.style.display = 'none'; // Hide main intro
+      displayItemContent(0); // Transition to course outline
     });
+  } else {
+    console.error('Required elements for intro/outline toggle not found. Check IDs: showOutlineBtn, courseOutline, and class: intro-section.');
+  }
+
+  // --- Unit Introduction Logic ---
+
+  function showCourseOutlineView() {
+    if (introSection) introSection.style.display = 'none'; // Hide main intro
+    if (pdfViewer) pdfViewer.style.display = 'none';
+    if (belowBackBtnDiv) belowBackBtnDiv.style.display = 'none';
+    if (unitIntroductionsContainer) unitIntroductionsContainer.style.display = 'none';
+    if (courseOutline) courseOutline.style.display = 'block'; // Show course outline
+    currentIndex = null; // Reset index when returning to outline
+  }
+
+  function showUnitIntroductionView(introContentId) {
+    if (introSection) introSection.style.display = 'none';
+    if (courseOutline) courseOutline.style.display = 'none';
+    if (pdfViewer) pdfViewer.style.display = 'none';
+    if (belowBackBtnDiv) belowBackBtnDiv.style.display = 'none';
+
+    if (unitIntroductionsContainer) {
+      unitIntroductionsContainer.style.display = 'block';
+      const allIntroContents = unitIntroductionsContainer.querySelectorAll('.unit-introduction-content');
+      allIntroContents.forEach(content => {
+        content.style.display = (content.id === introContentId) ? 'block' : 'none';
+      });
+    } else {
+      console.error("Unit introductions container not found.");
+    }
+  }
+
+  unitSubtitles.forEach(subtitle => {
+    subtitle.addEventListener('click', () => {
+      const introId = subtitle.dataset.unitIntroId;
+      if (introId) showUnitIntroductionView(introId);
+    });
+  });
+
+  startUnitBtns.forEach(button => {
+    button.addEventListener('click', () => {
+      const targetItemId = button.dataset.targetItemId;
+      const targetItemElement = document.getElementById(targetItemId); // This should be the Pre-Test item
+      const targetIndex = targetItemElement ? allNavigableItems.indexOf(targetItemElement) : -1;
+      if (targetIndex > -1) displayItemContent(targetIndex); // Display the Pre-Test
+    });
+  });
+
+  unitIntroBackBtns.forEach(button => button.addEventListener('click', showCourseOutlineView));
+});

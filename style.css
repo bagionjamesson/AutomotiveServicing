@@ -4,7 +4,7 @@
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background-color: #f9f9f9;
+  background-color: #b3c6e0;
 }
 
 /* ==========================================================================
@@ -584,7 +584,7 @@ canvas#pdf-canvas {
 /* Back Buttons related to Course Outline flow */
 .back-btn-container { /* General container for back buttons if needed */
   display: flex;
-  justify-content: flex-start;
+  justify-content: center; /* Changed to center the button(s) within */
   margin: 8px 0 0 0; /* Reduced from 24px to 8px */
 }
 .back-to-modules-btn {
@@ -731,6 +731,7 @@ canvas#pdf-canvas {
 #belowBackToOutlineBtn,
 #belowNextBtn {
   margin: 0 12px;
+  text-align: ;
 }
 #belowPrevLabel,
 #belowNextLabel {
@@ -747,7 +748,7 @@ canvas#pdf-canvas {
   text-overflow: ellipsis;
   max-width: 230px; /* Adjust as needed */
   display: inline-block;
-  vertical-align: middle;
+  vertical-align: center;
 }
 #below-pdf-back-btn { /* Another specific layout for below PDF buttons */
   display: flex;
@@ -763,6 +764,7 @@ canvas#pdf-canvas {
   white-space: nowrap;
   vertical-align: middle;
   margin: 0;
+  text-align: center;
 }
 /* --- END PDF Controls & Below-PDF Navigation --- */
 
@@ -994,9 +996,51 @@ canvas#pdf-canvas {
   border-radius: 5px;
   font-weight: bold;
   cursor: pointer;
+  font-size: 1rem;
   transition: background 0.2s;
 }
 .yellow-btn:hover {
-  background-color: #ffe066;
+  background-color: #ffe066; /* Corrected hex value */
+}
+.unit1-pretest-item
+.yellow-btn {
+  background-color: #43b66e; /* Green for unit 1 pretest */
+  color: black;
+  text-align: center; /* Corrected syntax */
+  padding: 10px 22px;
+  border-radius: 5px;
+}
+.unit2-pretest-item
+.yellow-btn {
+  background-color: #ffe066; /* Light yellow for Unit 2 pretest */
+  color: #fff; /* White text */
+  text-align: center;
+  padding: 10px 22px;
+  border-radius: 5px;
+  font-size: large;
+}
+
+/* Style for "Start Unit" buttons */
+.start-unit-btn.yellow-btn {
+  background-color: #ffd600; /* Default yellow background */
+  color: black;              /* Black text color as requested */
+  /* This will override the background-color and color from .yellow-btn */
+  /* Other properties like padding, border-radius, font-weight will be inherited from .yellow-btn */
+  /* Centering the button */
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: fit-content; /* Makes the button only as wide as its content */
+}
+
+.start-unit-btn.yellow-btn:hover {
+  background-color: #ffe066; /* Lighter yellow for hover effect */
+  /* color: black; /* Text color remains black on hover */
+  /* This will override the hover effect from .yellow-btn:hover */
+}
+
+/* Hides "Back to Course Outline" buttons within unit introductions */
+.unit-intro-back-btn {
+  display: none;
 }
 /* --- END Utility Button Styles --- */
